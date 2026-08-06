@@ -175,6 +175,39 @@ const res = await QrVerse.scan('https://example.com/my-qr.png');
 console.log(res.data);
 ```
 
+## Example — file shown in an `<img>` tag
+
+If your UI already previews the uploaded file in an `<img>` element, pass that element
+straight to `QrVerse.scan()`. The scanner waits for the image to load (even if you call
+it right after setting `src`) and then decodes it.
+
+```html
+<img id="preview" alt="Uploaded preview">
+<input type="file" id="file" accept="image/*">
+
+<script src="https://cdn.jsdelivr.net/gh/v4t3rnomfr/qr-verse@master/cdn/qrverse.min.js"></script>
+<script>
+  document.getElementById('file').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // 1. Show the upload in an <img> tag (object URL, never uploaded anywhere).
+    const preview = document.getElementById('preview');
+    preview.src = URL.createObjectURL(file);
+
+    // 2. Scan that <img> tag — safe to call immediately; it waits for the load.
+    try {
+      const res = await QrVerse.scan(preview);
+      alert('Scanned: ' + res.data);
+    } catch (err) {
+      alert(err.message);
+    }
+  });
+</script>
+```
+
+Data URLs work the same way — set `img.src` to a `data:image/...` string and scan the element.
+
 ## Local demo
 
 Run `npm start` and open `http://localhost:3000/cdn-demo.html`.

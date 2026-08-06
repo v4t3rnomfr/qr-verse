@@ -39,11 +39,35 @@
       }
 
       if (typeof HTMLImageElement !== 'undefined' && input instanceof HTMLImageElement) {
+        // Already fully loaded and decodable.
         if (input.complete && input.naturalWidth) {
           resolve(input);
-        } else {
-          input.onload = function () { resolve(input); };
-          input.onerror = function () { reject(QrVerseError('Could not load the provided <img> element.', 'SOURCE_ERROR')); };
+          return;
+        }
+        // Finished loading but produced no pixels (broken/blank image).
+        if (input.complete) {
+          reject(QrVerseError('The provided <img> could not be decoded (no image data).', 'SOURCE_ERROR'));
+          return;
+        }
+        // Mid-load (typical for img.src = URL.createObjectURL(file)): resolve once
+        // the image finishes. Use decode() when available, with onload as fallback.
+        var settled = false;
+        function finish() {
+          if (settled) return;
+          settled = true;
+          input.onload = input.onerror = null;
+          resolve(input);
+        }
+        function fail() {
+          if (settled) return;
+          settled = true;
+          input.onload = input.onerror = null;
+          reject(QrVerseError('Could not load the provided <img> element.', 'SOURCE_ERROR'));
+        }
+        input.onload = finish;
+        input.onerror = fail;
+        if (typeof input.decode === 'function') {
+          input.decode().then(finish).catch(function () { /* onerror handles failures */ });
         }
         return;
       }

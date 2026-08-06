@@ -116,6 +116,26 @@ Give the user a file picker and call `QrVerse.scan()`:
 
 `QrVerse.scan()` accepts a **File/Blob**, an **image URL** or **data URL**, an **`<img>`**, or a **`<canvas>`**. It resolves to `{ success, data, binaryData, version, location, alignmentPattern }`.
 
+Scanning an `<img>` that shows a file upload also works — pass the element right after setting `src`; it waits for the image to load:
+
+```html
+<img id="preview">
+<input type="file" id="qr-file" accept="image/*">
+<script>
+  document.getElementById('qr-file').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    document.getElementById('preview').src = URL.createObjectURL(file);
+    try {
+      const res = await QrVerse.scan(document.getElementById('preview'));
+      console.log('Scanned:', res.data);
+    } catch (err) {
+      console.error(err.message);
+    }
+  });
+</script>
+```
+
 ### Scan raw pixels (webcam)
 
 ```js
