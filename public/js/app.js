@@ -1860,9 +1860,32 @@ function setupEventListeners() {
     item.addEventListener('click', () => switchType(item.dataset.type));
   });
 
-  // Sidebar toggle for mobile
+  // Sidebar toggle (in-sidebar button) — desktop collapsed state
   $('#sidebarToggle').addEventListener('click', () => {
     $('#sidebar').classList.toggle('open');
+    $('#sidebarOverlay').classList.toggle('active', $('#sidebar').classList.contains('open'));
+  });
+
+  // Mobile hamburger button (outside sidebar, always visible on mobile)
+  $('#mobileMenuBtn').addEventListener('click', () => {
+    $('#sidebar').classList.toggle('open');
+    $('#sidebarOverlay').classList.toggle('active', $('#sidebar').classList.contains('open'));
+  });
+
+  // Sidebar overlay click closes sidebar
+  $('#sidebarOverlay').addEventListener('click', () => {
+    $('#sidebar').classList.remove('open');
+    $('#sidebarOverlay').classList.remove('active');
+  });
+
+  // Close sidebar on nav item click (mobile)
+  $$('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      if (window.innerWidth <= 768) {
+        $('#sidebar').classList.remove('open');
+        $('#sidebarOverlay').classList.remove('active');
+      }
+    });
   });
 
   // Generate button
@@ -2006,12 +2029,17 @@ function setupEventListeners() {
     }
   });
 
-  // Click outside sidebar to close on mobile
+  // Click outside sidebar to close on mobile (overlay handles most cases, this is a fallback)
   document.addEventListener('click', (e) => {
     const sidebar = $('#sidebar');
     if (window.innerWidth <= 768 && sidebar.classList.contains('open')) {
-      if (!sidebar.contains(e.target) && !$('#sidebarToggle').contains(e.target)) {
+      if (
+        !sidebar.contains(e.target) &&
+        !$('#mobileMenuBtn').contains(e.target) &&
+        !$('#sidebarOverlay').contains(e.target)
+      ) {
         sidebar.classList.remove('open');
+        $('#sidebarOverlay').classList.remove('active');
       }
     }
   });

@@ -159,6 +159,7 @@
 
   <!-- Dashboard -->
   <div id="dashboard" class="dashboard hidden">
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
         <div class="brand-logo">
@@ -284,6 +285,11 @@
 
     <main class="main-content">
       <header class="dashboard-header">
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open navigation menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 12h18M3 6h18M3 18h18"/>
+          </svg>
+        </button>
         <h1 class="page-title">QR Generator</h1>
         <div class="header-actions">
           <a href="docs.html" class="icon-btn" aria-label="Documentation">
