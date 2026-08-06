@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "build:cdn": "node build-cdn.js",
+    "test:cdn": "node test/cdn-smoke.js"
   },
   "keywords": [
     "qr-code",
@@ -18,11 +20,15 @@
   "dependencies": {
     "@vercel/blob": "^0.26.0",
     "express": "^4.19.2",
-    "qrcode": "^1.5.3",
+    "html5-qrcode": "^2.3.8",
+    "jsqr": "^1.4.0",
     "qr-code-styling": "^1.6.0-rc.1",
-    "html5-qrcode": "^2.3.8"
+    "qrcode": "^1.5.3"
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "terser": "^5.49.2"
   }
 }

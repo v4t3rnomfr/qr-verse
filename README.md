@@ -77,6 +77,26 @@ QRVerse is a premium, modern QR code generator built with Node.js, Express.js, H
 - Focus visible indicators
 - Reduced motion support
 
+## CDN Scanner Library
+
+QRVerse ships a **self-contained, client-side SDK** that anyone can drop into an existing project via jsDelivr to decode QR codes from an image. No backend or API key needed.
+
+```html
+<script src="https://cdn.jsdelivr.net/gh/v4t3rnomfr/qr-verse@master/cdn/qrverse.min.js"></script>
+<script>
+  const res = await QrVerse.scan(myImage);   // File, URL, <img>, or <canvas>
+  console.log(res.data);
+</script>
+```
+
+- `QrVerse.scan(input, options?)` — scan a File/Blob, image URL/data URL, `<img>` or `<canvas>`
+- `QrVerse.scanImageData(rgba, w, h, options?)` — raw pixels (webcam frames)
+- `QrVerse.scanFile(file)` / `QrVerse.scanUrl(url)` — conveniences
+
+Full docs, CDN URLs, and a live example: see [`cdn/README.md`](cdn/README.md) and [`public/cdn-demo.html`](public/cdn-demo.html).
+
+Rebuild after changing the SDK: `npm run build:cdn` (commit the files in `cdn/`). Smoke test: `npm run test:cdn`.
+
 ## Installation
 
 ### Prerequisites
