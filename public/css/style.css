@@ -1977,20 +1977,9 @@ body::before {
     font-size: 12px;
   }
 
-  .icon-btn span {
-    display: none;
-  }
-
   .icon-btn svg {
     width: 18px;
     height: 18px;
-  }
-
-  /* Make icon buttons icon-only on narrow screens */
-  @media (max-width: 480px) {
-    .icon-btn span {
-      display: none;
-    }
   }
 
   .customization-grid {
@@ -2056,16 +2045,16 @@ body::before {
     grid-template-columns: repeat(2, 1fr);
   }
 
+  .icon-btn span {
+    display: none;
+  }
+
   .modal {
     padding: 0;
   }
 
   .modal-body {
     padding: 16px;
-  }
-
-  .dashboard-header {
-    flex-wrap: wrap;
   }
 
   .preview-container {

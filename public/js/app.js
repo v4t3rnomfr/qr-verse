@@ -1855,38 +1855,36 @@ function setupCustomizationEvents() {
 
 // ===== Event Listeners =====
 function setupEventListeners() {
-  // Navigation
-  $$('.nav-item').forEach(item => {
-    item.addEventListener('click', () => switchType(item.dataset.type));
-  });
-
-  // Sidebar toggle (in-sidebar button) — desktop collapsed state
-  $('#sidebarToggle').addEventListener('click', () => {
-    $('#sidebar').classList.toggle('open');
-    $('#sidebarOverlay').classList.toggle('active', $('#sidebar').classList.contains('open'));
-  });
-
-  // Mobile hamburger button (outside sidebar, always visible on mobile)
-  $('#mobileMenuBtn').addEventListener('click', () => {
-    $('#sidebar').classList.toggle('open');
-    $('#sidebarOverlay').classList.toggle('active', $('#sidebar').classList.contains('open'));
-  });
-
-  // Sidebar overlay click closes sidebar
-  $('#sidebarOverlay').addEventListener('click', () => {
-    $('#sidebar').classList.remove('open');
-    $('#sidebarOverlay').classList.remove('active');
-  });
-
-  // Close sidebar on nav item click (mobile)
+  // Navigation — single loop handles type switch + mobile sidebar close
   $$('.nav-item').forEach(item => {
     item.addEventListener('click', () => {
+      switchType(item.dataset.type);
       if (window.innerWidth <= 768) {
         $('#sidebar').classList.remove('open');
         $('#sidebarOverlay').classList.remove('active');
       }
     });
   });
+
+  // Helper to toggle the sidebar + overlay together
+  function toggleSidebar() {
+    const isOpen = $('#sidebar').classList.toggle('open');
+    $('#sidebarOverlay').classList.toggle('active', isOpen);
+  }
+
+  function closeSidebar() {
+    $('#sidebar').classList.remove('open');
+    $('#sidebarOverlay').classList.remove('active');
+  }
+
+  // In-sidebar toggle button (visible on desktop when sidebar is collapsible)
+  $('#sidebarToggle').addEventListener('click', toggleSidebar);
+
+  // Mobile hamburger button (always visible on mobile, outside the sidebar)
+  $('#mobileMenuBtn').addEventListener('click', toggleSidebar);
+
+  // Backdrop overlay click closes sidebar
+  $('#sidebarOverlay').addEventListener('click', closeSidebar);
 
   // Generate button
   $('#generateBtn').addEventListener('click', () => {
@@ -2029,17 +2027,12 @@ function setupEventListeners() {
     }
   });
 
-  // Click outside sidebar to close on mobile (overlay handles most cases, this is a fallback)
+  // Click outside sidebar to close on mobile (overlay handles most cases; this is a fallback)
   document.addEventListener('click', (e) => {
     const sidebar = $('#sidebar');
     if (window.innerWidth <= 768 && sidebar.classList.contains('open')) {
-      if (
-        !sidebar.contains(e.target) &&
-        !$('#mobileMenuBtn').contains(e.target) &&
-        !$('#sidebarOverlay').contains(e.target)
-      ) {
-        sidebar.classList.remove('open');
-        $('#sidebarOverlay').classList.remove('active');
+      if (!sidebar.contains(e.target) && !$('#mobileMenuBtn').contains(e.target)) {
+        closeSidebar();
       }
     }
   });
