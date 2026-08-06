@@ -79,21 +79,56 @@ QRVerse is a premium, modern QR code generator built with Node.js, Express.js, H
 
 ## CDN Scanner Library
 
-QRVerse ships a **self-contained, client-side SDK** that anyone can drop into an existing project via jsDelivr to decode QR codes from an image. No backend or API key needed.
+QRVerse ships a **self-contained, client-side SDK** that anyone can drop into an existing project via jsDelivr to decode QR codes from an image. No backend or API key needed. Scanning runs entirely in the visitor's browser — images are never uploaded.
+
+### Add the CDN script
+
+Put one script tag in your page (before any code that uses `QrVerse`):
 
 ```html
 <script src="https://cdn.jsdelivr.net/gh/v4t3rnomfr/qr-verse@master/cdn/qrverse.min.js"></script>
+```
+
+| Build | URL |
+|-------|-----|
+| Minified (recommended) | `https://cdn.jsdelivr.net/gh/v4t3rnomfr/qr-verse@master/cdn/qrverse.min.js` |
+| Readable | `https://cdn.jsdelivr.net/gh/v4t3rnomfr/qr-verse@master/cdn/qrverse.js` |
+
+### Scan an image
+
+Give the user a file picker and call `QrVerse.scan()`:
+
+```html
+<input type="file" id="qr-file" accept="image/*">
+
 <script>
-  const res = await QrVerse.scan(myImage);   // File, URL, <img>, or <canvas>
-  console.log(res.data);
+  document.getElementById('qr-file').addEventListener('change', async (e) => {
+    if (!e.target.files[0]) return;
+    try {
+      const res = await QrVerse.scan(e.target.files[0]);   // File, URL, <img>, or <canvas>
+      console.log('Scanned:', res.data);                    // decoded text
+    } catch (err) {
+      console.error(err.message);                           // e.g. "No QR code found"
+    }
+  });
 </script>
 ```
 
-- `QrVerse.scan(input, options?)` — scan a File/Blob, image URL/data URL, `<img>` or `<canvas>`
-- `QrVerse.scanImageData(rgba, w, h, options?)` — raw pixels (webcam frames)
-- `QrVerse.scanFile(file)` / `QrVerse.scanUrl(url)` — conveniences
+`QrVerse.scan()` accepts a **File/Blob**, an **image URL** or **data URL**, an **`<img>`**, or a **`<canvas>`**. It resolves to `{ success, data, binaryData, version, location, alignmentPattern }`.
 
-Full docs, CDN URLs, and a live example: see [`cdn/README.md`](cdn/README.md) and [`public/cdn-demo.html`](public/cdn-demo.html).
+### Scan raw pixels (webcam)
+
+```js
+const ctx = canvas.getContext('2d');
+const { data, width, height } = ctx.getImageData(0, 0, canvas.width, canvas.height);
+const res = await QrVerse.scanImageData(data, width, height);
+```
+
+### Conveniences
+
+- `QrVerse.scanFile(file)` / `QrVerse.scanUrl(url)`
+
+Full docs, CDN URLs, and a live example: see [`cdn/README.md`](cdn/README.md) (a full copy-paste HTML example) and [`public/cdn-demo.html`](public/cdn-demo.html).
 
 Rebuild after changing the SDK: `npm run build:cdn` (commit the files in `cdn/`). Smoke test: `npm run test:cdn`.
 

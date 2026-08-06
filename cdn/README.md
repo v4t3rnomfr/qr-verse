@@ -13,6 +13,86 @@ A **self-contained, 100% client-side** QR scanning library served from jsDelivr.
 </script>
 ```
 
+## How to use
+
+Follow these steps to scan QR codes in any existing web project.
+
+### 1. Add the CDN script to your page
+
+Put the `<script>` tag inside `<head>` or right before `</body>` — before any code that calls `QrVerse`.
+
+```html
+<script src="https://cdn.jsdelivr.net/gh/v4t3rnomfr/qr-verse@master/cdn/qrverse.min.js"></script>
+```
+
+After loading, the global `QrVerse` object becomes available with a `scan` function.
+
+### 2. Get an image from your user
+
+Give the user a file picker. The file itself is <em>never uploaded</em> — scanning happens in their browser.
+
+```html
+<input type="file" id="qr-file" accept="image/*">
+```
+
+### 3. Call `QrVerse.scan()` with the file
+
+```html
+<script>
+  document.getElementById('qr-file').addEventListener('change', async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    try {
+      const result = await QrVerse.scan(file);
+      console.log('Scanned data:', result.data);   // the decoded text
+      alert('Scanned: ' + result.data);
+    } catch (err) {
+      alert('Could not scan: ' + err.message);      // e.g. "No QR code found"
+    }
+  });
+</script>
+```
+
+### 4. Done 🎉
+
+That's the whole integration — one script tag plus one call to `QrVerse.scan()`.
+
+---
+
+### Complete copy-paste HTML
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Scan with QrVerse CDN</title>
+</head>
+<body>
+  <h1>Upload a QR code image</h1>
+  <input type="file" id="qr-file" accept="image/*">
+  <p id="out"></p>
+
+  <!-- Load the library -->
+  <script src="https://cdn.jsdelivr.net/gh/v4t3rnomfr/qr-verse@master/cdn/qrverse.min.js"></script>
+
+  <script>
+    document.getElementById('qr-file').addEventListener('change', async (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      try {
+        const result = await QrVerse.scan(file);
+        document.getElementById('out').textContent = 'Scanned: ' + result.data;
+      } catch (err) {
+        document.getElementById('out').textContent = 'Error: ' + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
+```
+
 ## CDN URLs
 
 | File | URL |
