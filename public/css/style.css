@@ -1843,6 +1843,48 @@ body::before {
   }
 }
 
+/* Mobile menu button (hamburger outside sidebar) */
+.mobile-menu-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.mobile-menu-btn:hover {
+  background: var(--card-bg-hover);
+  color: var(--text-primary);
+  border-color: var(--primary);
+}
+
+.mobile-menu-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Sidebar overlay backdrop */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 99;
+  animation: fadeIn 0.2s ease;
+}
+
+.sidebar-overlay.active {
+  display: block;
+}
+
 /* ============================================
    RESPONSIVE DESIGN
    ============================================ */
@@ -1920,6 +1962,7 @@ body::before {
     font-size: 28px;
   }
 
+  /* Sidebar: full-height drawer on mobile */
   .sidebar {
     position: fixed;
     left: 0;
@@ -1936,7 +1979,12 @@ body::before {
   }
 
   .sidebar-toggle {
-    display: block;
+    display: none; /* hide the in-sidebar toggle; mobile-menu-btn is used instead */
+  }
+
+  /* Show hamburger button in header on mobile */
+  .mobile-menu-btn {
+    display: flex;
   }
 
   .mobile-menu-toggle {
@@ -2000,12 +2048,13 @@ body::before {
   }
 
   .history-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   }
 
   .toast-container {
-    left: 20px;
-    right: 20px;
+    left: 12px;
+    right: 12px;
+    top: 12px;
   }
 
   .toast {
@@ -2017,10 +2066,20 @@ body::before {
     grid-template-columns: 1fr;
     gap: 16px;
   }
+
+  /* Nav item closes sidebar on mobile */
+  .nav-item {
+    padding: 14px 16px;
+  }
 }
 
 /* Small Mobile */
 @media (max-width: 480px) {
+  .hero-title {
+    font-size: 40px;
+    letter-spacing: -1px;
+  }
+
   .hero-stats {
     gap: 20px;
   }
@@ -2030,7 +2089,7 @@ body::before {
   }
 
   .action-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .preview-container {
@@ -2045,7 +2104,11 @@ body::before {
   }
 
   .info-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .icon-btn span {
+    display: none;
   }
 
   .modal {
@@ -2054,6 +2117,35 @@ body::before {
 
   .modal-body {
     padding: 16px;
+  }
+
+  .preview-container {
+    padding: 20px;
+  }
+
+  .preview-area {
+    width: 260px;
+    height: 260px;
+  }
+}
+
+/* Very small (320px) */
+@media (max-width: 360px) {
+  .hero-title {
+    font-size: 34px;
+  }
+
+  .nav-links {
+    gap: 12px;
+  }
+
+  .action-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .preview-area {
+    width: 220px;
+    height: 220px;
   }
 }
 

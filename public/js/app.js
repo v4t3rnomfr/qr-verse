@@ -1855,11 +1855,16 @@ function setupCustomizationEvents() {
 
 // ===== Event Listeners =====
 function setupEventListeners() {
-  // Navigation
+  // Navigation — single loop handles type switch + mobile sidebar close
   $$('.nav-item').forEach(item => {
-    item.addEventListener('click', () => switchType(item.dataset.type));
+    item.addEventListener('click', () => {
+      switchType(item.dataset.type);
+      if (window.innerWidth <= 768) {
+        $('#sidebar').classList.remove('open');
+        $('#sidebarOverlay').classList.remove('active');
+      }
+    });
   });
-
   // Sidebar drawer helpers (mobile)
   const sidebar = $('#sidebar');
   const overlay = $('#sidebarOverlay');
@@ -2046,7 +2051,7 @@ function setupEventListeners() {
     }
   });
 
-  // Click outside sidebar to close on mobile
+  // Click outside sidebar to close on mobile (overlay handles most cases; this is a fallback)
   document.addEventListener('click', (e) => {
     const s = $('#sidebar');
     const ov = $('#sidebarOverlay');
