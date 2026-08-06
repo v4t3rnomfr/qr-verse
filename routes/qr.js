@@ -13,7 +13,8 @@ const router = express.Router();
 // Directory where uploaded images (Image → Link QR) are stored
 const uploadsDir = path.join(__dirname, '..', 'public', 'uploads');
 
-// Clean old uploads (older than 24h) on server start
+// Clean old uploads (older than 24h) on server start.
+// On Vercel (read-only filesystem) this is a no-op — Blob Store handles storage.
 function cleanOldUploads() {
   try {
     if (!fs.existsSync(uploadsDir)) return;
@@ -28,6 +29,10 @@ function cleanOldUploads() {
       }
     });
   } catch (err) {
+    if (err.code === 'ENOENT' || err.code === 'EROFS' || err.code === 'EACCES') {
+      // Read-only filesystem (Vercel) — Blob Store cleans up automatically.
+      return;
+    }
     console.error('Upload cleanup error:', err);
   }
 }
@@ -131,7 +136,7 @@ router.post('/generate', async (req, res) => {
  * Saves an uploaded image (Image → Link) and returns its public URL.
  * Body: { image: <base64 data URL> }
  */
-router.post('/upload', (req, res) => {
+router.post('/upload', async (req, res) => {
   try {
     const { image } = req.body;
     if (!image || typeof image !== 'string') {
@@ -156,12 +161,30 @@ router.post('/upload', (req, res) => {
     }
 
     const filename = `${crypto.randomBytes(8).toString('hex')}.${ext}`;
-    const filePath = path.join(uploadsDir, filename);
-    fs.writeFileSync(filePath, buffer);
+
+    // On Vercel (serverless), use Blob Store since the filesystem
+    // is read-only. Falls back to local disk for development.
+    let url = '';
+    let isExternal = false;
+    try {
+      const { put } = require('@vercel/blob');
+      const blobRes = await put(`qrverse/${filename}`, buffer, {
+        access: 'public',
+        contentType: `image/${ext === 'jpg' ? 'jpeg' : ext}`
+      });
+      url = blobRes.url;
+      isExternal = true;
+    } catch (blobErr) {
+      // Local fallback (dev / traditional host)
+      const filePath = path.join(uploadsDir, filename);
+      fs.writeFileSync(filePath, buffer);
+      url = `/uploads/${filename}`;
+    }
 
     res.json({
       success: true,
-      url: `/uploads/${filename}`,
+      url,
+      isExternal,
       message: 'Image uploaded successfully'
     });
   } catch (error) {

@@ -80,15 +80,15 @@ QRVerse is a premium, modern QR code generator built with Node.js, Express.js, H
 ## Installation
 
 ### Prerequisites
-- Node.js 14 or higher
+- Node.js 18 or higher
 - npm (comes with Node.js)
 
-### Setup
+### Local Development
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/qrverse.git
-cd qrverse
+git clone https://github.com/v4t3rnomfr/qr-verse.git
+cd qr-verse
 
 # Install dependencies
 npm install
@@ -98,6 +98,54 @@ npm start
 ```
 
 Navigate to `http://localhost:3000` in your browser.
+
+## Deploy on Vercel (Recommended)
+
+QRVerse is fully configured for **Vercel serverless deployment** — no other hosting setup needed.
+
+### Option A — Deploy via Vercel Dashboard (easiest)
+
+1. Push this repository to GitHub:
+   ```bash
+   git add -A
+   git commit -m "Vercel deployment"
+   git push origin master
+   ```
+2. Go to [vercel.com/new](https://vercel.com/new), import the `qr-verse` repo.
+3. Vercel auto-detects the framework. Keep the default build settings (no build command, output `public`).
+4. Click **Deploy**. Done! 🎉
+
+### Option B — Deploy via Vercel CLI
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# From project root
+vercel        # Preview deployment
+vercel --prod # Production deployment
+```
+
+### Environment Variables (for Image → Link UL)
+
+The uploads route uses local disk in development. In production on Vercel, connect the **Vercel Blob Store**:
+
+1. In your Vercel project → **Storage** → **Create Blob Store**.
+2. Copy the read/write token.
+3. In **Settings → Environment Variables** add:
+
+   | Name | Value |
+   |------|-------|
+   | `BLOB_READ_WRITE_TOKEN` | (your token) |
+
+4. Redeploy. The upload endpoint will automatically store images in Blob instead of local disk.
+
+### Project on Vercel
+
+- The Express app (with SPA fallback + API) is served through a single serverless function via `api/index.js`.
+- Static assets (`public/`) are served by the same Express app through `vercel.json` rewrites.
+- All client-side AJAX calls use relative `/api/qr/...` paths, so no environment URL config is needed.
+- LocalStorage (history/favorites) works identically since everything runs in the browser.
 
 ## Usage
 

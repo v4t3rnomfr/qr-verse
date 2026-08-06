@@ -545,7 +545,7 @@ sms:+1234567890?body=Text%20me%20back
 
       <h4 class="docs-h4">GET /api/qr/health</h4>
       <div class="docs-code">
-<pre><code>curl http://localhost:3000/api/qr/health
+<pre><code>curl https://your-app.vercel.app/api/qr/health
 
 // Response
 {
@@ -559,7 +559,7 @@ sms:+1234567890?body=Text%20me%20back
       <h4 class="docs-h4">POST /api/qr/generate</h4>
       <p>Server-side QR generation (PNG data URL) using the <code>qrcode</code> package.</p>
       <div class="docs-code">
-<pre><code>curl -X POST http://localhost:3000/api/qr/generate \
+<pre><code>curl -X POST https://your-app.vercel.app/api/qr/generate \
   -H "Content-Type: application/json" \
   -d '{"data":"https://example.com","options":{"size":300,"errorCorrectionLevel":"H"}}'
 

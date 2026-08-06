@@ -1,6 +1,10 @@
 /**
  * QRVerse - Express Server
- * Serves the QR generator application and API routes
+ * Serves the QR generator application and API routes.
+ *
+ * Vercel-compatible: exports the Express app for serverless
+ * deployment. When run directly (`node server.js`), it starts
+ * a local listener on PORT (default 3000).
  */
 
 const express = require('express');
@@ -11,10 +15,16 @@ const qrRoutes = require('./routes/qr');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Ensure uploads directory exists (used by Image → Link QR type)
+// Ensure uploads directory exists (used by Image → Link QR type on local dev).
+// On Vercel the filesystem is read-only, so this is best-effort only.
 const uploadsDir = path.join(__dirname, 'public', 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
+try {
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+} catch (err) {
+  // Read-only filesystem (Vercel serverless) — uploads use Blob Store instead.
+  console.log('Uploads dir unavailable (read-only FS):', err.code);
 }
 
 // Middleware — allow larger payloads for image-based QR data
@@ -45,9 +55,14 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`\n🚀 QRVerse is running!`);
-  console.log(`   ➜  Local:   http://localhost:${PORT}`);
-  console.log(`   ➜  API:     http://localhost:${PORT}/api/qr\n`);
-});
+// Export app for Vercel / external hosters
+module.exports = app;
+
+// Start local server only when run directly (not imported by Vercel)
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`\n🚀 QRVerse is running!`);
+    console.log(`   ➜  Local:   http://localhost:${PORT}`);
+    console.log(`   ➜  API:     http://localhost:${PORT}/api/qr\n`);
+  });
+}
