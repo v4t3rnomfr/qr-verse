@@ -1865,50 +1865,26 @@ function setupEventListeners() {
       }
     });
   });
-  // Sidebar drawer helpers (mobile)
-  const sidebar = $('#sidebar');
-  const overlay = $('#sidebarOverlay');
 
-  function openSidebar() {
-    sidebar.classList.add('open');
-    overlay?.classList.add('open');
+  // Helper to toggle the sidebar + overlay together
+  function toggleSidebar() {
+    const isOpen = $('#sidebar').classList.toggle('open');
+    $('#sidebarOverlay').classList.toggle('active', isOpen);
   }
 
   function closeSidebar() {
-    sidebar.classList.remove('open');
-    overlay?.classList.remove('open');
+    $('#sidebar').classList.remove('open');
+    $('#sidebarOverlay').classList.remove('active');
   }
 
-  // Toggle inside the sidebar (visible when drawer is open)
-  $('#sidebarToggle').addEventListener('click', closeSidebar);
+  // In-sidebar toggle button (visible on desktop when sidebar is collapsible)
+  $('#sidebarToggle').addEventListener('click', toggleSidebar);
 
-  // Toggle in the header — always reachable, even when drawer is closed
-  const mobileMenuToggle = $('#mobileMenuToggle');
-  mobileMenuToggle.addEventListener('click', () => {
-    if (sidebar.classList.contains('open')) {
-      closeSidebar();
-    } else {
-      openSidebar();
-    }
-  });
+  // Mobile hamburger button (always visible on mobile, outside the sidebar)
+  $('#mobileMenuBtn').addEventListener('click', toggleSidebar);
 
-  // Keep aria-expanded in sync so screen readers reflect drawer state
-  function syncAriaExpanded() {
-    mobileMenuToggle.setAttribute('aria-expanded', String(sidebar.classList.contains('open')));
-  }
-  const drawerObserver = new MutationObserver(syncAriaExpanded);
-  drawerObserver.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
-  syncAriaExpanded();
-
-  // Overlay click closes the drawer
-  overlay.addEventListener('click', closeSidebar);
-
-  // Close drawer after selecting a QR type on mobile
-  $$('.nav-item').forEach(item => {
-    item.addEventListener('click', () => {
-      if (window.innerWidth <= 768) closeSidebar();
-    });
-  });
+  // Backdrop overlay click closes sidebar
+  $('#sidebarOverlay').addEventListener('click', closeSidebar);
 
   // Generate button
   $('#generateBtn').addEventListener('click', () => {
@@ -2053,12 +2029,10 @@ function setupEventListeners() {
 
   // Click outside sidebar to close on mobile (overlay handles most cases; this is a fallback)
   document.addEventListener('click', (e) => {
-    const s = $('#sidebar');
-    const ov = $('#sidebarOverlay');
-    if (window.innerWidth <= 768 && s.classList.contains('open')) {
-      if (!s.contains(e.target) && !e.target.closest('#mobileMenuToggle') && !e.target.closest('#sidebarOverlay')) {
-        s.classList.remove('open');
-        ov?.classList.remove('open');
+    const sidebar = $('#sidebar');
+    if (window.innerWidth <= 768 && sidebar.classList.contains('open')) {
+      if (!sidebar.contains(e.target) && !$('#mobileMenuBtn').contains(e.target)) {
+        closeSidebar();
       }
     }
   });
