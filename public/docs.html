@@ -87,6 +87,14 @@
         <a href="#localstorage" class="docs-nav-link">Browser Storage</a>
         <a href="#faq" class="docs-nav-link">FAQ</a>
       </div>
+
+      <div class="docs-nav-group">
+        <p class="docs-nav-group-title">QrVerse CDN Scanner</p>
+        <a href="#cdn-overview" class="docs-nav-link">Overview</a>
+        <a href="#cdn-install" class="docs-nav-link">Installation (script tag)</a>
+        <a href="#cdn-api" class="docs-nav-link">API Reference</a>
+        <a href="#cdn-examples" class="docs-nav-link">Examples</a>
+      </div>
     </nav>
   </aside>
 
@@ -610,6 +618,136 @@ sms:+1234567890?body=Text%20me%20back
       <div class="docs-callout docs-callout-warning">
         <strong>Privacy:</strong> Everything is stored locally on your device. Clearing your browser data
         will erase your history. Nothing is ever uploaded to a server.
+      </div>
+    </section>
+
+    <!-- QrVerse CDN Scanner -->
+    <section class="docs-section" id="cdn-overview">
+      <h2 class="docs-h2">🔌 QrVerse CDN Scanner</h2>
+      <p>
+        QRVerse ships a <strong>self-contained, 100% client-side</strong> QR scanning library that anyone can add
+        to an existing project with a single <code>&lt;script&gt;</code> tag. Given an image containing a QR code,
+        it decodes the payload locally in the browser — no backend, no API key, no extra dependencies.
+      </p>
+
+      <div class="docs-callout docs-callout-info">
+        <strong>Why use the CDN build?</strong>
+        <p>
+          Everything runs on the visitor's device. The bundle combines the <code>jsQR</code> decoder with a tiny
+          wrapper, so images never leave the browser. Perfect for plugins, widgets, web apps, and tools where you
+          want to read QR codes from uploaded files or webcam frames.
+        </p>
+      </div>
+    </section>
+
+    <!-- CDN install -->
+    <section class="docs-section" id="cdn-install">
+      <h3 class="docs-h3">⚙️ Installation</h3>
+      <p>Add one script tag. Choose the minified build for production.</p>
+
+      <h5 class="docs-h5">Minified (recommended, ~130 KB)</h5>
+      <div class="docs-code">
+<pre><code>&lt;script src="https://cdn.jsdelivr.net/gh/v4t3rnomfr/qr-verse@master/cdn/qrverse.min.js"&gt;&lt;/script&gt;</code></pre>
+      </div>
+
+      <h5 class="docs-h5">Readable (development)</h5>
+      <div class="docs-code">
+<pre><code>&lt;script src="https://cdn.jsdelivr.net/gh/v4t3rnomfr/qr-verse@master/cdn/qrverse.js"&gt;&lt;/script&gt;</code></pre>
+      </div>
+
+      <div class="docs-callout docs-callout-warning">
+        <strong>Pin a version in production.</strong> Use <code>@1.0.0</code> (or your app's release tag) instead of
+        <code>@master</code> so your page is unaffected by future releases:
+        <br><br>
+        <code>https://cdn.jsdelivr.net/gh/v4t3rnomfr/qr-verse@1.0.0/cdn/qrverse.min.js</code>
+      </div>
+
+      <p>After loading, the library exposes a global <code>QrVerse</code> object.</p>
+    </section>
+
+    <!-- CDN API -->
+    <section class="docs-section" id="cdn-api">
+      <h3 class="docs-h3">🧑‍💻 API Reference</h3>
+
+      <h4 class="docs-h4"><code>QrVerse.scan(input, options?) → Promise&lt;Result&gt;</code></h4>
+      <p>Scans any supported image source and returns the decoded data. <strong>Input</strong> can be:</p>
+      <ul class="docs-list">
+        <li><code>File</code> / <code>Blob</code> — from an <code>&lt;input type="file"&gt;</code></li>
+        <li><code>string</code> — a <code>data:image/...</code> URL or an <code>https://</code> image URL</li>
+        <li><code>HTMLImageElement</code> — an <code>&lt;img&gt;</code> already on the page</li>
+        <li><code>HTMLCanvasElement</code> — a canvas with the image drawn on it</li>
+      </ul>
+
+      <table class="docs-table">
+        <tr><th>Option</th><th>Default</th><th>Description</th></tr>
+        <tr><td><code>maxDimension</code></td><td><code>800</code></td><td>Downscale images larger than this (px, longest side) for speed.</td></tr>
+        <tr><td><code>inversionAttempts</code></td><td><code>'attemptBoth'</code></td><td><code>'attemptBoth'</code>, <code>'dontInvert'</code>, or <code>true</code>.</td></tr>
+      </table>
+
+      <h4 class="docs-h4">Resolved value</h4>
+      <div class="docs-code">
+<pre><code>{
+  "success": true,
+  "data": "https://example.com",   // decoded text
+  "binaryData": [ ... ],           // decoded bytes (may be null)
+  "version": 3,                    // QR version, or null
+  "location": { ... },             // corner points, or null
+  "alignmentPattern": { ... }      // or null
+}</code></pre>
+      </div>
+      <p>
+        Rejects with a <code>QrVerseError</code> (check <code>err.code</code>) on bad input, or
+        <code>NOT_FOUND</code> when no QR code is detected.
+      </p>
+
+      <h4 class="docs-h4"><code>QrVerse.scanImageData(rgba, width, height, options?)</code></h4>
+      <p>Scan raw RGBA pixels (<code>Uint8ClampedArray</code>) directly — ideal for webcam or video frames.</p>
+
+      <h4 class="docs-h4">Convenience methods</h4>
+      <ul class="docs-list">
+        <li><code>QrVerse.scanFile(file, options?)</code></li>
+        <li><code>QrVerse.scanUrl(url, options?)</code></li>
+      </ul>
+    </section>
+
+    <!-- CDN examples -->
+    <section class="docs-section" id="cdn-examples">
+      <h3 class="docs-h3">🧪 Examples</h3>
+
+      <h4 class="docs-h4">Scan a file from an input</h4>
+      <div class="docs-code">
+<pre><code>&lt;input type="file" id="picker" accept="image/*"&gt;
+&lt;script src="https://cdn.jsdelivr.net/gh/v4t3rnomfr/qr-verse@master/cdn/qrverse.min.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  document.getElementById('picker').addEventListener('change', async (e) =&gt; {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      const res = await QrVerse.scan(file);
+      console.log('Scanned:', res.data);
+    } catch (err) {
+      console.error('No QR found:', err.message);
+    }
+  });
+&lt;/script&gt;</code></pre>
+      </div>
+
+      <h4 class="docs-h4">Scan by image URL</h4>
+      <div class="docs-code">
+<pre><code>const res = await QrVerse.scan('https://example.com/my-qr.png');
+console.log(res.data);</code></pre>
+      </div>
+
+      <h4 class="docs-h4">Scan a webcam frame (raw pixels)</h4>
+      <div class="docs-code">
+<pre><code>const ctx = canvas.getContext('2d');
+const { data, width, height } = ctx.getImageData(0, 0, canvas.width, canvas.height);
+const res = await QrVerse.scanImageData(data, width, height);</code></pre>
+      </div>
+
+      <div class="docs-callout docs-callout-info">
+        <strong>Try it live:</strong> open <code>/cdn-demo.html</code> for a working, stylable example page, or
+        run <code>npm start</code> and visit <a href="/cdn-demo.html">http://localhost:3000/cdn-demo.html</a>.
       </div>
     </section>
 
