@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="QRVerse - Generate beautiful and professional QR codes instantly">
+  <title>QRVerse - Professional QR Code Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Landing Page -->
+  <div id="landingPage" class="landing-page">
+    <nav class="landing-nav">
+      <div class="nav-brand">
+        <div class="brand-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1"/>
+            <rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="3" y="14" width="7" height="7" rx="1"/>
+            <path d="M14 14h3v3h-3zM21 14v.01M14 21v.01M21 21v.01"/>
+          </svg>
+        </div>
+        <span class="brand-name">QRVerse</span>
+      </div>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#about">About</a>
+        <a href="docs.html" class="nav-docs-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+          Docs
+        </a>
+        <button class="btn btn-primary btn-sm" id="launchBtn" onclick="showDashboard()">Launch App</button>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="hero-content">
+        <h1 class="hero-title">QRVerse</h1>
+        <p class="hero-subtitle">Generate beautiful and professional QR codes instantly.</p>
+        <button class="btn btn-primary btn-lg" onclick="showDashboard()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          Generate QR Code
+        </button>
+        <div class="hero-stats">
+          <div class="stat">
+            <span class="stat-number">10+</span>
+            <span class="stat-label">QR Types</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">100%</span>
+            <span class="stat-label">Free</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">∞</span>
+            <span class="stat-label">Unlimited</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-qr-demo">
+          <div class="qr-demo-grid"></div>
+          <div class="qr-demo-logo">Q</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="features">
+      <h2 class="section-title">Powerful Features</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
+          </div>
+          <h3>Instant Generation</h3>
+          <p>Generate QR codes in real-time as you type. No waiting, no page refreshes.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+          </div>
+          <h3>10+ QR Types</h3>
+          <p>URL, WiFi, Email, Phone, WhatsApp, vCard, Maps, Events and more.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M12 5a7 7 0 0 1 7 7M5 12a7 7 0 0 1 7-7M12 19a7 7 0 0 0 7-7"/>
+            </svg>
+          </div>
+          <h3>Full Customization</h3>
+          <p>Colors, gradients, eye shapes, dot styles, logos, and more at your fingertips.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12a9 9 0 1 1-9-9"/>
+              <path d="M21 3v6h-6"/>
+            </svg>
+          </div>
+          <h3>Scan Verification</h3>
+          <p>Test scan your QR codes with webcam or image upload to ensure they work.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2v20M17 7H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <h3>Multiple Formats</h3>
+          <p>Download your QR codes as PNG, SVG, JPEG, PDF or copy them directly.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16v16H4z"/>
+              <path d="M8 9h8M8 13h8M8 17h5"/>
+            </svg>
+          </div>
+          <h3>History & Favorites</h3>
+          <p>All your generated QR codes saved locally with search and favorites.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="about-section">
+      <div class="about-content">
+        <h2>Why QRVerse?</h2>
+        <p>QRVerse is a premium QR code generator designed for professionals. Create stunning, scannable QR codes with complete control over appearance, format, and functionality.</p>
+        <ul class="about-list">
+          <li>✔ No registration required</li>
+          <li>✔ Privacy-first - everything stays in your browser</li>
+          <li>✔ Production-ready QR codes for business use</li>
+          <li>✔ High error correction for reliable scanning</li>
+        </ul>
+      </div>
+    </section>
+
+    <footer class="landing-footer">
+      <div class="footer-content">
+        <div class="brand-name">QRVerse</div>
+        <p>© 2026 QRVerse. All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="dashboard" class="dashboard hidden">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1"/>
+            <rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="3" y="14" width="7" height="7" rx="1"/>
+            <path d="M14 14h3v3h-3zM21 14v.01M14 21v.01M21 21v.01"/>
+          </svg>
+        </div>
+        <span class="brand-name">QRVerse</span>
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 12h18M3 6h18M3 18h18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="sidebar-section">
+        <span class="sidebar-label">QR TYPES</span>
+        <nav class="nav-menu" id="navMenu" aria-label="QR type navigation">
+          <button class="nav-item active" data-type="text" aria-label="Text QR">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 6h16M4 12h10M4 18h7"/>
+            </svg>
+            <span>Text</span>
+          </button>
+          <button class="nav-item" data-type="url" aria-label="URL QR">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+            <span>URL</span>
+          </button>
+          <button class="nav-item" data-type="wifi" aria-label="WiFi QR">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/>
+            </svg>
+            <span>WiFi</span>
+          </button>
+          <button class="nav-item" data-type="email" aria-label="Email QR">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="4" width="20" height="16" rx="2"/>
+              <path d="m22 7-10 6L2 7"/>
+            </svg>
+            <span>Email</span>
+          </button>
+          <button class="nav-item" data-type="phone" aria-label="Phone QR">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+            <span>Phone</span>
+          </button>
+          <button class="nav-item" data-type="whatsapp" aria-label="WhatsApp QR">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+            <span>WhatsApp</span>
+          </button>
+          <button class="nav-item" data-type="sms" aria-label="SMS QR">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+            </svg>
+            <span>SMS</span>
+          </button>
+          <button class="nav-item" data-type="maps" aria-label="Google Maps QR">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            <span>Maps</span>
+          </button>
+          <button class="nav-item" data-type="vcard" aria-label="vCard QR">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="4" width="20" height="16" rx="2"/>
+              <circle cx="8" cy="10" r="2"/>
+              <path d="M5 16c0-1.66 1.34-3 3-3s3 1.34 3 3M14 9h6M14 13h6M14 17h4"/>
+            </svg>
+            <span>Contact</span>
+          </button>
+          <button class="nav-item" data-type="event" aria-label="Event QR">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <path d="M16 2v4M8 2v4M3 10h18"/>
+            </svg>
+            <span>Event</span>
+          </button>
+          <button class="nav-item" data-type="imagelink" aria-label="Image Link QR">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <path d="m21 15-5-5L5 21"/>
+            </svg>
+            <span>Image Link</span>
+          </button>
+          <button class="nav-item" data-type="custom" aria-label="Custom QR">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+            <span>Custom</span>
+          </button>
+        </nav>
+      </div>
+
+      <div class="sidebar-footer">
+        <a href="docs.html" class="btn btn-outline btn-full">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+          Documentation
+        </a>
+        <button class="btn btn-outline btn-full" onclick="showLanding()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <path d="M9 22V12h6v10"/>
+          </svg>
+          Back to Home
+        </button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="dashboard-header">
+        <h1 class="page-title">QR Generator</h1>
+        <div class="header-actions">
+          <a href="docs.html" class="icon-btn" aria-label="Documentation">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            </svg>
+            <span>Docs</span>
+          </a>
+          <button class="icon-btn" id="historyBtn" aria-label="History">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 3v5h5M3.05 13A9 9 0 1 0 6 5.3L3 8"/>
+            </svg>
+            <span>History</span>
+          </button>
+          <button class="icon-btn" id="scanBtn" aria-label="Test Scan">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/>
+              <path d="M7 12h10"/>
+            </svg>
+            <span>Test Scan</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="dashboard-layout">
+        <!-- Center: Dynamic Form -->
+        <section class="form-section" aria-label="QR Configuration">
+          <div class="card form-card">
+            <div class="card-header">
+              <h2 class="card-title">QR Content</h2>
+              <span class="card-badge" id="typeBadge">Text</span>
+            </div>
+
+            <div class="form-body" id="formBody">
+              <!-- Dynamic forms injected here -->
+            </div>
+
+            <div class="card-header card-header-mt">
+              <h2 class="card-title">Customization</h2>
+            </div>
+
+            <div class="customization-grid">
+              <div class="form-group">
+                <label for="qrSize">Size</label>
+                <input type="range" id="qrSize" min="200" max="600" value="300" step="50">
+                <div class="range-labels">
+                  <span>200</span>
+                  <span id="qrSizeValue">300</span>
+                  <span>600</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="qrMargin">Margin</label>
+                <input type="range" id="qrMargin" min="0" max="10" value="4" step="1">
+                <div class="range-labels">
+                  <span>0</span>
+                  <span id="qrMarginValue">4</span>
+                  <span>10</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="fgColor">Foreground Color</label>
+                <input type="color" id="fgColor" value="#6366f1">
+              </div>
+
+              <div class="form-group">
+                <label for="bgColor">Background Color</label>
+                <input type="color" id="bgColor" value="#ffffff">
+              </div>
+
+              <div class="form-group">
+                <label for="dotStyle">Dot Style</label>
+                <select id="dotStyle">
+                  <option value="square">Square</option>
+                  <option value="rounded">Rounded</option>
+                  <option value="circle">Circle</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="eyeStyle">Eye Shape</label>
+                <select id="eyeStyle">
+                  <option value="square">Square</option>
+                  <option value="circle">Circle</option>
+                  <option value="rounded">Rounded</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="eyeColor">Eye Color</label>
+                <input type="color" id="eyeColor" value="#4f46e5">
+              </div>
+
+              <div class="form-group">
+                <label for="ecLevel">Error Correction</label>
+                <select id="ecLevel">
+                  <option value="L">L - Low (7%)</option>
+                  <option value="M" selected>M - Medium (15%)</option>
+                  <option value="Q">Q - Quartile (25%)</option>
+                  <option value="H">H - High (30%)</option>
+                </select>
+              </div>
+
+              <div class="form-group form-group-full">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="gradientEnabled">
+                  <span class="checkbox-custom"></span>
+                  Enable Gradient
+                </label>
+              </div>
+
+              <div class="form-group gradient-options hidden" id="gradientOptions">
+                <label for="gradientColor1">Gradient Start</label>
+                <input type="color" id="gradientColor1" value="#6366f1">
+              </div>
+
+              <div class="form-group gradient-options hidden" id="gradientOptions2">
+                <label for="gradientColor2">Gradient End</label>
+                <input type="color" id="gradientColor2" value="#ec4899">
+              </div>
+
+              <div class="form-group form-group-full">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="transparentBg">
+                  <span class="checkbox-custom"></span>
+                  Transparent Background
+                </label>
+              </div>
+
+              <div class="form-group form-group-full logo-group">
+                <label>Logo <span class="label-hint">Placed in center of QR</span></label>
+                <div class="logo-controls">
+                  <input type="file" id="logoUpload" accept="image/png,image/jpeg,image/svg+xml" hidden>
+                  <button class="btn btn-outline btn-sm" id="uploadLogoBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                    </svg>
+                    Upload Logo
+                  </button>
+                  <button class="btn btn-outline btn-sm hidden" id="removeLogoBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                    </svg>
+                    Remove Logo
+                  </button>
+                  <span class="logo-hint">PNG / JPG / SVG — use High error correction for best scanning</span>
+                </div>
+                <div class="logo-size-group hidden" id="logoSizeGroup">
+                  <label for="logoSize">Logo Size</label>
+                  <input type="range" id="logoSize" min="10" max="30" value="20" step="5">
+                  <span id="logoSizeValue">20%</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button class="btn btn-primary btn-full" id="generateBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 5v14M5 12h14"/>
+                </svg>
+                Generate QR Code
+              </button>
+              <button class="btn btn-outline btn-full" id="clearBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                </svg>
+                Clear All
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right: Live Preview -->
+        <aside class="preview-section" aria-label="QR Preview">
+          <div class="card preview-card">
+            <div class="card-header">
+              <h2 class="card-title">Live Preview</h2>
+              <span class="preview-status" id="previewStatus">Ready</span>
+            </div>
+
+            <div class="preview-container">
+              <div id="previewArea" class="preview-area">
+                <div id="previewPlaceholder" class="preview-placeholder">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="3" y="3" width="7" height="7" rx="1"/>
+                    <rect x="14" y="3" width="7" height="7" rx="1"/>
+                    <rect x="3" y="14" width="7" height="7" rx="1"/>
+                    <path d="M14 14h3v3h-3zM21 14v.01M14 21v.01M21 21v.01"/>
+                  </svg>
+                  <p>Your QR Preview Will Appear Here</p>
+                </div>
+                <div id="generatingOverlay" class="generating-overlay hidden">
+                  <div class="spinner"></div>
+                  <p>Generating QR...</p>
+                </div>
+                <div id="qrContainer" class="qr-container hidden" role="button" tabindex="0" aria-label="Open QR content in new tab"></div>
+                <div id="previewClickHint" class="preview-click-hint hidden">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/>
+                  </svg>
+                  <span>Click QR to open</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="preview-info" id="previewInfo">
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="info-label">Scan Status</span>
+                  <span class="info-value scan-ready"><span class="dot"></span>Ready to Scan</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Resolution</span>
+                  <span class="info-value" id="infoResolution">-</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">QR Version</span>
+                  <span class="info-value" id="infoVersion">-</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Created</span>
+                  <span class="info-value" id="infoCreated">-</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">File Type</span>
+                  <span class="info-value" id="infoFileType">-</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Data Length</span>
+                  <span class="info-value" id="infoDataLength">-</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="action-buttons">
+              <div class="action-row">
+                <button class="action-btn" id="downloadPng" aria-label="Download PNG">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                  </svg>
+                  <span>PNG</span>
+                </button>
+                <button class="action-btn" id="downloadSvg" aria-label="Download SVG">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                  </svg>
+                  <span>SVG</span>
+                </button>
+                <button class="action-btn" id="downloadJpeg" aria-label="Download JPEG">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                  </svg>
+                  <span>JPEG</span>
+                </button>
+                <button class="action-btn" id="downloadPdf" aria-label="Download PDF">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <path d="M14 2v6h6M9 15h6M9 11h2"/>
+                  </svg>
+                  <span>PDF</span>
+                </button>
+              </div>
+              <div class="action-row">
+                <button class="action-btn" id="copyImage" aria-label="Copy Image">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2"/>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                  </svg>
+                  <span>Copy</span>
+                </button>
+                <button class="action-btn" id="printBtn" aria-label="Print QR">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                    <rect x="6" y="14" width="12" height="8"/>
+                  </svg>
+                  <span>Print</span>
+                </button>
+                <button class="action-btn" id="shareBtn" aria-label="Share QR">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="18" cy="5" r="3"/>
+                    <circle cx="6" cy="12" r="3"/>
+                    <circle cx="18" cy="19" r="3"/>
+                    <path d="m8.59 13.51 6.83 3.98M15.41 6.51l-6.82 3.98"/>
+                  </svg>
+                  <span>Share</span>
+                </button>
+                <button class="action-btn" id="newBtn" aria-label="Generate New">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 5v14M5 12h14"/>
+                  </svg>
+                  <span>New</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <!-- Test Scan Modal -->
+  <div id="scanModal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Test Scan QR Code</h2>
+        <button class="modal-close" id="closeScanModal" aria-label="Close modal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="scan-tabs">
+          <button class="scan-tab active" id="webcamTab">Webcam</button>
+          <button class="scan-tab" id="uploadTab">Upload Image</button>
+        </div>
+        <div class="scan-content" id="webcamScan">
+          <div id="qr-reader" class="qr-reader"></div>
+          <button class="btn btn-primary btn-full" id="startScanBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/>
+            </svg>
+            Start Camera
+          </button>
+        </div>
+        <div class="scan-content hidden" id="uploadScan">
+          <div class="upload-zone" id="scanUploadZone">
+            <input type="file" id="scanUpload" accept="image/*" hidden>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+            </svg>
+            <p>Click to upload a QR code image</p>
+            <span class="upload-hint">PNG, JPG, WEBP — screenshot or photo of a QR code</span>
+          </div>
+          <div id="fileScanArea" class="file-scan-area"></div>
+        </div>
+        <div class="scan-result hidden" id="scanResult">
+          <div class="result-icon" id="resultIcon"></div>
+          <p id="resultText"></p>
+          <div class="result-content hidden" id="resultContent">
+            <label>Decoded Content:</label>
+            <code id="decodedContent"></code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- History Modal -->
+  <div id="historyModal" class="modal-overlay hidden">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <h2>QR History</h2>
+        <div class="modal-header-actions">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input type="text" id="historySearch" placeholder="Search history..." aria-label="Search history">
+          </div>
+          <button class="modal-close" id="closeHistoryModal" aria-label="Close modal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 6 6 18M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="history-grid" id="historyGrid">
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M3 3v5h5M3.05 13A9 9 0 1 0 6 5.3L3 8"/>
+            </svg>
+            <p>No QR codes generated yet</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <script src="https://unpkg.com/qr-code-styling@1.6.0-rc.1/lib/qr-code-styling.js"></script>
+  <script src="https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <script src="https://unpkg.com/jsqr@1.4.0/dist/jsQR.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

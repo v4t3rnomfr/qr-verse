@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="QRVerse Documentation - Complete guide to QR code generation, customization, and API">
+  <title>QRVerse Documentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="docs-body">
+
+<!-- ===== Docs Header ===== -->
+<header class="docs-header">
+  <div class="docs-header-inner">
+    <a href="/" class="docs-brand">
+      <div class="brand-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/>
+          <path d="M14 14h3v3h-3zM21 14v.01M14 21v.01M21 21v.01"/>
+        </svg>
+      </div>
+      <span>QRVerse <em>Docs</em></span>
+    </a>
+    <nav class="docs-header-nav">
+      <a href="/" class="docs-header-link">← Back to App</a>
+      <span class="docs-version">v1.0.0</span>
+    </nav>
+  </div>
+</header>
+
+<div class="docs-layout">
+
+  <!-- ===== Sidebar Navigation ===== -->
+  <aside class="docs-sidebar" id="docsSidebar">
+    <button class="docs-sidebar-toggle" id="docsSidebarToggle" aria-label="Toggle documentation navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 6h18M3 12h18M3 18h18"/>
+      </svg>
+      <span>Docs Menu</span>
+    </button>
+    <nav class="docs-nav" id="docsNav">
+      <div class="docs-nav-group">
+        <p class="docs-nav-group-title">Getting Started</p>
+        <a href="#overview" class="docs-nav-link">Overview</a>
+        <a href="#quickstart" class="docs-nav-link">Quick Start</a>
+        <a href="#interface" class="docs-nav-link">Interface Guide</a>
+      </div>
+
+      <div class="docs-nav-group">
+        <p class="docs-nav-group-title">QR Code Types</p>
+        <a href="#type-text" class="docs-nav-link">📝 Text</a>
+        <a href="#type-url" class="docs-nav-link">🔗 URL</a>
+        <a href="#type-wifi" class="docs-nav-link">📶 WiFi</a>
+        <a href="#type-email" class="docs-nav-link">✉️ Email</a>
+        <a href="#type-phone" class="docs-nav-link">📞 Phone</a>
+        <a href="#type-whatsapp" class="docs-nav-link">💬 WhatsApp</a>
+        <a href="#type-sms" class="docs-nav-link">📱 SMS</a>
+        <a href="#type-maps" class="docs-nav-link">📍 Google Maps</a>
+        <a href="#type-vcard" class="docs-nav-link">👤 Contact (vCard)</a>
+        <a href="#type-event" class="docs-nav-link">📅 Event</a>
+        <a href="#type-custom" class="docs-nav-link docs-nav-link-featured">⚙️ Custom Data</a>
+      </div>
+
+      <div class="docs-nav-group">
+        <p class="docs-nav-group-title">Design & Output</p>
+        <a href="#customization" class="docs-nav-link">Customization</a>
+        <a href="#logo-upload" class="docs-nav-link">Logo Upload</a>
+        <a href="#downloads" class="docs-nav-link">Download Formats</a>
+        <a href="#scanning" class="docs-nav-link">Scan Verification</a>
+      </div>
+
+      <div class="docs-nav-group">
+        <p class="docs-nav-group-title">Features</p>
+        <a href="#history" class="docs-nav-link">History & Favorites</a>
+        <a href="#shortcuts" class="docs-nav-link">Keyboard Shortcuts</a>
+      </div>
+
+      <div class="docs-nav-group">
+        <p class="docs-nav-group-title">Developers</p>
+        <a href="#api" class="docs-nav-link">REST API Reference</a>
+        <a href="#localstorage" class="docs-nav-link">Browser Storage</a>
+        <a href="#faq" class="docs-nav-link">FAQ</a>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- ===== Main Content ===== -->
+  <main class="docs-content">
+
+    <!-- Overview -->
+    <section class="docs-section" id="overview">
+      <h1 class="docs-h1">QRVerse Documentation</h1>
+      <p class="docs-intro">
+        QRVerse is a professional, client-side QR code generator with a modern SaaS design. Everything runs
+        in your browser — no data is sent to any server. Generate beautiful, scannable QR codes for text,
+        URLs, WiFi, contacts, events, and much more.
+      </p>
+
+      <div class="docs-callout docs-callout-info">
+        <strong>💡 Why QRVerse?</strong>
+        <p>
+          Unlike basic generators, QRVerse offers real-time previews, complete visual customization
+          (colors, shapes, gradients, logos), downloadable vector formats, built-in scan verification,
+          and local history — all in a polished, responsive interface.
+        </p>
+      </div>
+    </section>
+
+    <!-- Quick Start -->
+    <section class="docs-section" id="quickstart">
+      <h2 class="docs-h2">🚀 Quick Start</h2>
+      <ol class="docs-list docs-list-ordered">
+        <li><strong>Open the generator</strong> — Click <em>Generate QR Code</em> on the landing page, or go directly to <code>/#generator</code>.</li>
+        <li><strong>Pick a type</strong> — Choose <em>Text, URL, WiFi, Email, Phone, WhatsApp, SMS, Maps, Contact, Event, or Custom</em> from the left sidebar.</li>
+        <li><strong>Fill in the fields</strong> — The live preview updates instantly as you type. No button press needed.</li>
+        <li><strong>Customize design</strong> — Adjust size, colors, dot style, eye shape, gradients, error correction, and optional logo.</li>
+        <li><strong>Download / Share</strong> — Export as PNG, SVG, JPEG, PDF, copy to clipboard, print, or share via the native share sheet.</li>
+        <li><strong>Verify it scans</strong> — Use the <em>Test Scan</em> button to validate your QR with your webcam or by uploading an image.</li>
+      </ol>
+    </section>
+
+    <!-- Interface -->
+    <section class="docs-section" id="interface">
+      <h2 class="docs-h2">🧭 Interface Guide</h2>
+      <p>The dashboard has three main areas:</p>
+      <ul class="docs-list">
+        <li><strong>Left sidebar</strong> — Switch between the 11 QR types. Your current type is highlighted. On mobile, open it with the hamburger button.</li>
+        <li><strong>Center panel</strong> — Dynamic input form matching the selected type. Fields are validated live.</li>
+        <li><strong>Right preview card</strong> — Shows a live, animated QR preview plus stats (status, resolution, version, creation time, file types, data length).</li>
+      </ul>
+      <p>Below the preview you'll find all action buttons: <em>PNG, SVG, JPEG, PDF, Copy, Print, Share, New, Clear</em>.</p>
+    </section>
+
+    <!-- ===== QR TYPES ===== -->
+    <section class="docs-section" id="types">
+      <h2 class="docs-h2">📦 QR Code Types</h2>
+      <p>QRVerse supports 11 different QR code types. Here's everything you need to know about each one.</p>
+
+      <!-- Text -->
+      <div class="docs-type-block" id="type-text">
+        <h3 class="docs-h3">📝 Text</h3>
+        <p>Encodes a plain string of text. When scanned, the reader will display the raw text content.</p>
+        <div class="docs-code">
+<pre><code>// Encoded payload (plain text)
+Hello, world! This is a QRVerse QR code.
+</code></pre>
+        </div>
+        <table class="docs-table">
+          <tr><th>Field</th><th>Required</th><th>Description</th></tr>
+          <tr><td>Text Content</td><td>✔</td><td>Any text up to ~2,953 bytes (version 40, low EC).</td></tr>
+        </table>
+        <p><strong>Tip:</strong> For longer text, increase the error correction level's partner — larger data yields denser QR grids. Keep the text under ~500 characters for best scannability.</p>
+      </div>
+
+      <!-- URL -->
+      <div class="docs-type-block" id="type-url">
+        <h3 class="docs-h3">🔗 URL</h3>
+        <p>Encodes a web address. Scanning opens the link in the phone's browser.</p>
+        <div class="docs-code">
+<pre><code>// Encoded payload
+https://example.com
+</code></pre>
+        </div>
+        <table class="docs-table">
+          <tr><th>Field</th><th>Required</th><th>Description</th></tr>
+          <tr><td>Website URL</td><td>✔</td><td>Must include <code>http://</code> or <code>https://</code>. Validated with the URL constructor.</td></tr>
+        </table>
+        <div class="docs-callout docs-callout-warning">
+          <strong>Remember:</strong> QR codes encode exactly what you type. Always include <code>https://</code> so scanners
+          treat it as a link — otherwise many phone cameras will open it as a text search.
+        </div>
+      </div>
+
+      <!-- WiFi -->
+      <div class="docs-type-block" id="type-wifi">
+        <h3 class="docs-h3">📶 WiFi</h3>
+        <p>Encodes WiFi credentials. Scanning prompts the device to <strong>join the network automatically</strong>.</p>
+        <div class="docs-code">
+<pre><code>// Encoded payload (WiFi config format)
+WIFI:T:WPA;S:MyNetworkName;P:SuperSecret123;H:false;;
+</code></pre>
+        </div>
+        <table class="docs-table">
+          <tr><th>Field</th><th>Required</th><th>Description</th></tr>
+          <tr><td>Network Name (SSID)</td><td>✔</td><td>The exact WiFi network name.</td></tr>
+          <tr><td>Password</td><td>–</td><td>Network password (empty for open networks).</td></tr>
+          <tr><td>Encryption</td><td>–</td><td>WPA/WPA2, WEP, or No Password.</td></tr>
+          <tr><td>Hidden Network</td><td>–</td><td>Toggle if the SSID is not broadcast.</td></tr>
+        </table>
+        <div class="docs-callout docs-callout-warning">
+          <strong>Security note:</strong> Anyone who scans this QR can connect to your network. Only share WiFi
+          codes with trusted people.
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="docs-type-block" id="type-email">
+        <h3 class="docs-h3">✉️ Email</h3>
+        <p>Encodes a <code>mailto:</code> link with optional subject and body. Scanning opens the email app with the fields pre-filled.</p>
+        <div class="docs-code">
+<pre><code>// Encoded payload
+mailto:someone@example.com?subject=Hello&body=This%20is%20prefilled
+</code></pre>
+        </div>
+        <table class="docs-table">
+          <tr><th>Field</th><th>Required</th><th>Description</th></tr>
+          <tr><td>Recipient Email</td><td>✔</td><td>Validated with the standard email regex.</td></tr>
+          <tr><td>Subject</td><td>–</td><td>Pre-filled subject line.</td></tr>
+          <tr><td>Message</td><td>–</td><td>Pre-filled body text.</td></tr>
+        </table>
+      </div>
+
+      <!-- Phone -->
+      <div class="docs-type-block" id="type-phone">
+        <h3 class="docs-h3">📞 Phone</h3>
+        <p>Encodes a <code>tel:</code> URI. Scanning offers to call the number.</p>
+        <div class="docs-code">
+<pre><code>// Encoded payload
+tel:+1234567890
+</code></pre>
+        </div>
+        <table class="docs-table">
+          <tr><th>Field</th><th>Required</th><th>Description</th></tr>
+          <tr><td>Phone Number</td><td>✔</td><td>Include country code (e.g., <code>+1</code>). Min 7 digits.</td></tr>
+        </table>
+        <p><strong>Format:</strong> QRVerse strips spaces, dashes, and parentheses, keeping only <code>+</code> and digits.</p>
+      </div>
+
+      <!-- WhatsApp -->
+      <div class="docs-type-block" id="type-whatsapp">
+        <h3 class="docs-h3">💬 WhatsApp</h3>
+        <p>Encodes a <code>wa.me</code> link. Scanning opens a WhatsApp chat with that number, optionally with a pre-filled message.</p>
+        <div class="docs-code">
+<pre><code>// Encoded payload
+https://wa.me/1234567890?text=Hi%20there!
+</code></pre>
+        </div>
+        <table class="docs-table">
+          <tr><th>Field</th><th>Required</th><th>Description</th></tr>
+          <tr><td>Phone Number</td><td>✔</td><td>With country code, no spaces. Min 10 digits.</td></tr>
+          <tr><td>Pre-filled Message</td><td>–</td><td>Default text inserted in the chat box.</td></tr>
+        </table>
+      </div>
+
+      <!-- SMS -->
+      <div class="docs-type-block" id="type-sms">
+        <h3 class="docs-h3">📱 SMS</h3>
+        <p>Encodes an <code>SMSTO:</code> payload. Scanning opens the messaging app with the number and optional message.</p>
+        <div class="docs-code">
+<pre><code>// Encoded payload
+SMSTO:+1234567890:Hey, meeting moved to 3pm.
+</code></pre>
+        </div>
+      </div>
+
+      <!-- Maps -->
+      <div class="docs-type-block" id="type-maps">
+        <h3 class="docs-h3">📍 Google Maps</h3>
+        <p>Encodes a Google Maps search query. Scanning opens Maps to that location.</p>
+        <div class="docs-code">
+<pre><code>// Encoded payload
+https://maps.google.com/?q=Empire+State+Building
+</code></pre>
+        </div>
+        <p>You can enter an address, place name, or raw coordinates like <code>40.7484,-73.9857</code>.</p>
+      </div>
+
+      <!-- vCard -->
+      <div class="docs-type-block" id="type-vcard">
+        <h3 class="docs-h3">👤 Contact (vCard)</h3>
+        <p>Encodes a full <code>vCard 3.0</code> file. Scanning prompts the phone to <strong>save a contact</strong>.</p>
+        <div class="docs-code">
+<pre><code>BEGIN:VCARD
+VERSION:3.0
+FN:John Doe
+N:Doe;John;;;
+TEL;TYPE=CELL:+1234567890
+EMAIL:john@example.com
+ORG:Acme Inc.
+TITLE:Software Engineer
+URL:https://example.com
+ADR:;;123 Main St;City;;12345;USA
+NOTE:Loves QR codes
+END:VCARD
+</code></pre>
+        </div>
+        <table class="docs-table">
+          <tr><th>Field</th><th>Required</th><th>Description</th></tr>
+          <tr><td>Full Name</td><td>✔</td><td>Used for both <code>FN</code> and parsed into <code>N</code>.</td></tr>
+          <tr><td>Phone</td><td>–</td><td>Stored as <code>TEL;TYPE=CELL</code>.</td></tr>
+          <tr><td>Email</td><td>–</td><td>Stored as <code>EMAIL</code>.</td></tr>
+          <tr><td>Organization</td><td>–</td><td>Stored as <code>ORG</code>.</td></tr>
+          <tr><td>Job Title</td><td>–</td><td>Stored as <code>TITLE</code>.</td></tr>
+          <tr><td>Website</td><td>–</td><td>Stored as <code>URL</code>.</td></tr>
+          <tr><td>Address</td><td>–</td><td>Stored as <code>ADR</code>.</td></tr>
+          <tr><td>Notes</td><td>–</td><td>Stored as <code>NOTE</code>.</td></tr>
+        </table>
+      </div>
+
+      <!-- Event -->
+      <div class="docs-type-block" id="type-event">
+        <h3 class="docs-h3">📅 Event</h3>
+        <p>Encodes an <code>iCalendar</code> VEVENT. Scanning prompts the phone to <strong>add the event to its calendar</strong>.</p>
+        <div class="docs-code">
+<pre><code>BEGIN:VEVENT
+SUMMARY:Team Meeting
+DESCRIPTION:Discuss Q3 roadmap
+LOCATION:Conference Room 1
+DTSTART:20260806T143000Z
+DTEND:20260806T153000Z
+END:VEVENT
+</code></pre>
+        </div>
+        <table class="docs-table">
+          <tr><th>Field</th><th>Required</th><th>Description</th></tr>
+          <tr><td>Event Title</td><td>✔</td><td>Stored as <code>SUMMARY</code>.</td></tr>
+          <tr><td>Description</td><td>–</td><td>Stored as <code>DESCRIPTION</code>.</td></tr>
+          <tr><td>Location</td><td>–</td><td>Stored as <code>LOCATION</code>.</td></tr>
+          <tr><td>Start Date</td><td>✔</td><td>Local date-time; converted to UTC (ISO 8601).</td></tr>
+          <tr><td>End Date</td><td>–</td><td>Optional; must be after start.</td></tr>
+        </table>
+      </div>
+
+      <!-- Custom -->
+      <div class="docs-type-block docs-type-block-featured" id="type-custom">
+        <div class="docs-badge">Most Powerful</div>
+        <h3 class="docs-h3">⚙️ Custom Data</h3>
+        <p>
+          The <strong>Custom Data</strong> type is the most flexible option. It encodes <em>exactly</em> what you type,
+          with zero formatting or validation. This is how you create advanced QR codes beyond the built-in templates.
+        </p>
+
+        <h4 class="docs-h4">How it works</h4>
+        <p>
+          Whatever string you enter becomes the raw payload. The scanner interprets the content based on
+          standardized prefixes. Here's the complete reference:
+        </p>
+
+        <h4 class="docs-h4">📋 Standard payload formats</h4>
+
+        <h5 class="docs-h5">WiFi (if you need more control)</h5>
+        <div class="docs-code">
+<pre><code>WIFI:T:WPA;S:MyNetwork;P:MyPassword;H:false;;
+
+// Parameters:
+// T  = encryption type   (WPA, WEP, nopass)
+// S  = SSID / network name
+// P  = password
+// H  = hidden            (true/false)
+// Escape special chars   (\, ;, ,, :, ") with backslash: S:My\;Network
+</code></pre>
+        </div>
+
+        <h5 class="docs-h5">Contact (if you need more vCard fields)</h5>
+        <div class="docs-code">
+<pre><code>BEGIN:VCARD
+VERSION:3.0
+FN:Jane Smith
+N:Smith;Jane;;;
+TEL;TYPE=CELL:+15551234567
+TEL;TYPE=WORK:+15559876543
+EMAIL;TYPE=WORK:jane@company.com
+ORG:MegaCorp
+TITLE:CTO
+URL:https://company.com
+ADR;TYPE=WORK:;;100 Office Pkwy;Springfield;IL;62701;US
+PHOTO;ENCODING=b;TYPE=JPEG:...base64...
+REV:2026-01-01T00:00:00Z
+END:VCARD
+
+// All vCard 3.0 properties are supported by phone address books.
+</code></pre>
+        </div>
+
+        <h5 class="docs-h5">Calendar event (ICS)</h5>
+        <div class="docs-code">
+<pre><code>BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//QRVerse//EN
+BEGIN:VEVENT
+SUMMARY:Conference
+DESCRIPTION:Annual tech conference
+LOCATION:Convention Center
+DTSTART:20260901T090000Z
+DTEND:20260903T170000Z
+END:VEVENT
+END:VCALENDAR
+</code></pre>
+        </div>
+
+        <h5 class="docs-h5">Cryptocurrency addresses</h5>
+        <div class="docs-code">
+<pre><code>bitcoin:1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa?amount=0.05&label=Donation
+ethereum:0x742d35Cc6634C0532925a3b844Bc454e4438f44e?value=1.5e18
+</code></pre>
+        </div>
+
+        <h5 class="docs-h5">App store / market links</h5>
+        <div class="docs-code">
+<pre><code>https://apps.apple.com/app/idxxxxxxxx
+https://play.google.com/store/apps/details?id=com.example.app
+</code></pre>
+        </div>
+
+        <h5 class="docs-h5">Social media profiles</h5>
+        <div class="docs-code">
+<pre><code>https://www.instagram.com/username
+https://www.tiktok.com/@username
+https://www.linkedin.com/in/username
+</code></pre>
+        </div>
+
+        <h5 class="docs-h5">Email with CC/BCC (advanced mailto)</h5>
+        <div class="docs-code">
+<pre><code>mailto:primary@example.com?cc=cc@example.com&bcc=bcc@example.com&subject=Hello&body=World
+</code></pre>
+        </div>
+
+        <h5 class="docs-h5">Phone call + SMS hybrid</h5>
+        <div class="docs-code">
+<pre><code>tel:+1234567890
+sms:+1234567890?body=Text%20me%20back
+</code></pre>
+        </div>
+
+        <h5 class="docs-h5">Plain text / notes</h5>
+        <div class="docs-code">
+<pre><code>This is a secret message. Scanners will show it as plain text.
+</code></pre>
+        </div>
+
+        <div class="docs-callout docs-callout-warning">
+          <strong>Character limits:</strong> QR codes hold a maximum of <code>2,953 bytes</code> at error
+          correction level L (version 40). Practical limit for reliable scanning is ~700–1,000 characters.
+          Non-ASCII text (emoji, accented characters) uses more bytes. Keep it short.
+        </div>
+
+        <div class="docs-callout docs-callout-info">
+          <strong>Pro tip:</strong> Use Custom Data when you need to encode a format QRVerse doesn't have a
+          dedicated template for — geolocation (<code>geo:lat,lng</code>), Bitcoin, app links, event details
+          with more fields, or anything else. The payload is passed through 100% untouched.
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CUSTOMIZATION ===== -->
+    <section class="docs-section" id="customization">
+      <h2 class="docs-h2">🎨 Customization</h2>
+      <p>Every design option in the <strong>Design</strong> panel updates the preview instantly. Here's what each control does:</p>
+
+      <table class="docs-table">
+        <tr><th>Control</th><th>Options</th><th>Description</th></tr>
+        <tr><td>Size</td><td>128 – 1024 px</td><td>Output pixel dimensions. Larger = crisper when printed/zoomed.</td></tr>
+        <tr><td>Margin</td><td>0 – 20</td><td>Quiet zone padding around the QR (modules). Minimum 4 recommended.</td></tr>
+        <tr><td>Foreground</td><td>Color picker</td><td>Color of the data modules (dots).</td></tr>
+        <tr><td>Background</td><td>Color picker</td><td>Background color. Use <em>Transparent</em> for logos on colored surfaces.</td></tr>
+        <tr><td>Dot Style</td><td>Rounded / Square / Circle</td><td>Shape of the data modules. <em>Circle</em> is softest; <em>Square</em> scans most reliably.</td></tr>
+        <tr><td>Gradient</td><td>Toggle + 2 colors</td><td>Linear gradient from color 1 → color 2 applied to dots & eyes. Gorgeous on colored posters.</td></tr>
+        <tr><td>Eye Shape</td><td>Square / Rounded / Dot / Extra-rounded</td><td>Style of the three finder patterns (corners).</td></tr>
+        <tr><td>Eye Color</td><td>Color picker</td><td>Overrides the eye (finder) color separately from dots.</td></tr>
+        <tr><td>Error Correction</td><td>L / M / Q / H</td><td>L=7%, M=15%, Q=25%, H=30% redundancy. <strong>H recommended when adding a logo.</strong></td></tr>
+        <tr><td>Logo</td><td>Upload PNG/JPG/SVG</td><td>Centered image with automatic quiet zone. Adjust logo size 10–50%.</td></tr>
+        <tr><td>Transparent BG</td><td>Toggle</td><td>Removes the background rectangle entirely.</td></tr>
+      </table>
+
+      <div class="docs-callout docs-callout-info">
+        <strong>Scannability rule of thumb:</strong>
+        High-contrast (dark dots on light background) + square dots + error correction Q/H = the most
+        reliable scans. Use fancy colors & rounded dots for marketing material, but always <em>Test Scan</em> before printing.
+      </div>
+    </section>
+
+    <!-- Logo Upload -->
+    <section class="docs-section" id="logo-upload">
+      <h2 class="docs-h2">🖼️ Logo Upload</h2>
+      <ul class="docs-list">
+        <li>Accepted formats: <strong>PNG, JPG, SVG</strong>.</li>
+        <li>The logo is automatically centered with a quiet zone, keeping the finder squares clear.</li>
+        <li>Logo size maps to <code>imageSize = value / 100</code> (e.g., 20% → 0.2 × QR width).</li>
+        <li>Adds a margin between the logo and QR modules so the code stays scannable.</li>
+        <li><strong>Always use error correction H</strong> with a logo — it replaces data capacity with redundancy, so the code still decodes.</li>
+      </ul>
+    </section>
+
+    <!-- Downloads -->
+    <section class="docs-section" id="downloads">
+      <h2 class="docs-h2">⬇️ Download Formats</h2>
+      <table class="docs-table">
+        <tr><th>Format</th><th>Best for</th><th>Notes</th></tr>
+        <tr><td>PNG</td><td>Web, social media</td><td>Lossless, transparent supported, 128–1024px.</td></tr>
+        <tr><td>SVG</td><td>Print, logos, vector editing</td><td>Lossless vector, scales to any size. Generated from canvas pixels.</td></tr>
+        <tr><td>JPEG</td><td>Photos, email</td><td>Smaller files, no transparency.</td></tr>
+        <tr><td>PDF</td><td>Documents, print</td><td>A4 with title, type, timestamp metadata, centered QR.</td></tr>
+      </table>
+      <p><strong>Copy</strong> — copies the PNG image directly to the clipboard (Clipboard API with fallback).</p>
+      <p><strong>Print</strong> — opens a clean, print-friendly page with the QR and metadata, and triggers the browser print dialog.</p>
+      <p><strong>Share</strong> — uses the OS native share sheet (Web Share API) to share the QR as a PNG file. Falls back to download on unsupported browsers.</p>
+    </section>
+
+    <!-- Scanning -->
+    <section class="docs-section" id="scanning">
+      <h2 class="docs-h2">🔍 Scan Verification</h2>
+      <p>QRVerse includes a built-in <strong>Test Scan</strong> tool — no phone needed. Two methods:</p>
+      <ol class="docs-list docs-list-ordered">
+        <li><strong>Webcam:</strong> Opens your camera and decodes QR codes in real time (via <code>html5-qrcode</code>).</li>
+        <li><strong>Upload image:</strong> Upload a screenshot or photo of a QR code and it will be decoded.</li>
+      </ol>
+      <p>The result shows <strong>✔ Scan Successful</strong> with the decoded content, or <strong>❌ Invalid QR</strong> with a helpful hint.</p>
+    </section>
+
+    <!-- History -->
+    <section class="docs-section" id="history">
+      <h2 class="docs-h2">🕘 History & Favorites</h2>
+      <ul class="docs-list">
+        <li>Every generated QR is saved automatically to <strong>LocalStorage</strong> (<code>qrverse_history</code>), capped at 50 items.</li>
+        <li>Each entry shows a rendered thumbnail, title, type, and date.</li>
+        <li><strong>Reuse</strong> — restores the type and (where possible) all form values, regenerating instantly.</li>
+        <li><strong>Favorite</strong> — toggles the star. Favorites are preserved across sessions.</li>
+        <li><strong>Delete</strong> — removes a single item.</li>
+        <li>The <strong>search box</strong> filters history by title, payload, or type as you type.</li>
+      </ul>
+    </section>
+
+    <!-- Shortcuts -->
+    <section class="docs-section" id="shortcuts">
+      <h2 class="docs-h2">⌨️ Keyboard Shortcuts</h2>
+      <table class="docs-table">
+        <tr><th>Shortcut</th><th>Action</th></tr>
+        <tr><td><code>Ctrl / Cmd + S</code></td><td>Generate QR code</td></tr>
+        <tr><td><code>Esc</code></td><td>Close modal (history / scan)</td></tr>
+      </table>
+      <p>All buttons are focusable and ARIA-labeled for keyboard-only operation. Live regions announce validation toasts to screen readers.</p>
+    </section>
+
+    <!-- API -->
+    <section class="docs-section" id="api">
+      <h2 class="docs-h2">🧑💻 REST API Reference</h2>
+      <p>QRVerse ships with a small Express backend exposing the following endpoints:</p>
+
+      <h4 class="docs-h4">GET /api/qr/health</h4>
+      <div class="docs-code">
+<pre><code>curl http://localhost:3000/api/qr/health
+
+// Response
+{
+  "status": "ok",
+  "service": "qrverse-api",
+  "timestamp": "2026-08-06T11:07:29.274Z"
+}
+</code></pre>
+      </div>
+
+      <h4 class="docs-h4">POST /api/qr/generate</h4>
+      <p>Server-side QR generation (PNG data URL) using the <code>qrcode</code> package.</p>
+      <div class="docs-code">
+<pre><code>curl -X POST http://localhost:3000/api/qr/generate \
+  -H "Content-Type: application/json" \
+  -d '{"data":"https://example.com","options":{"size":300,"errorCorrectionLevel":"H"}}'
+
+// Response
+{
+  "success": true,
+  "dataUrl": "data:image/png;base64,iVBORw0KGgo...",
+  "metadata": {
+    "size": 300,
+    "type": "url",
+    "dataLength": 19,
+    "timestamp": "2026-08-06T11:07:45.409Z"
+  }
+}
+</code></pre>
+      </div>
+
+      <table class="docs-table">
+        <tr><th>Request Body</th><th>Type</th><th>Description</th></tr>
+        <tr><td><code>data</code></td><td>string (required)</td><td>Payload to encode.</td></tr>
+        <tr><td><code>options.size</code></td><td>number</td><td>Output size in px (default 300).</td></tr>
+        <tr><td><code>options.errorCorrectionLevel</code></td><td>string</td><td>L | M | Q | H (default M).</td></tr>
+        <tr><td><code>options.margin</code></td><td>number</td><td>Quiet zone (default 4).</td></tr>
+      </table>
+    </section>
+
+    <!-- Storage -->
+    <section class="docs-section" id="localstorage">
+      <h2 class="docs-h2">💾 Browser Storage</h2>
+      <p>QRVerse stores one key in your browser LocalStorage:</p>
+      <div class="docs-code">
+<pre><code>qrverse_history  →  Array of up to 50 history items
+</code></pre>
+      </div>
+      <p>Each item is shaped like:</p>
+      <div class="docs-code">
+<pre><code>{
+  "id": 1234567890,          // timestamp
+  "type": "url",             // text|url|wifi|email|phone|whatsapp|sms|maps|vcard|event|custom
+  "data": "https://example.com",
+  "title": "example.com",
+  "date": "2026-08-06T11:07:45.409Z",
+  "favorite": false,
+  "options": { /* full styling config snapshot */ }
+}
+</code></pre>
+      </div>
+      <div class="docs-callout docs-callout-warning">
+        <strong>Privacy:</strong> Everything is stored locally on your device. Clearing your browser data
+        will erase your history. Nothing is ever uploaded to a server.
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="docs-section" id="faq">
+      <h2 class="docs-h2">❓ FAQ</h2>
+
+      <div class="docs-faq-item">
+        <h4 class="docs-faq-q">Do QR codes expire?</h4>
+        <p>No. Once printed or shared, a QR code works forever (unless it links to a resource that disappears).</p>
+      </div>
+      <div class="docs-faq-item">
+        <h4 class="docs-faq-q">What's the maximum amount of data I can encode?</h4>
+        <p>Up to 2,953 bytes at version 40 / EC level L. For reliable phone scanning, keep it under ~700 characters, especially with a logo.</p>
+      </div>
+      <div class="docs-faq-item">
+        <h4 class="docs-faq-q">Why won't my QR scan?</h4>
+        <p>Common causes: low contrast, insufficient quiet zone (margin), logo too large, distorted/stretched image, or blurry print. Use EC level H, avoid gradients with <em>light</em> dark colors, and always Test Scan.</p>
+      </div>
+      <div class="docs-faq-item">
+        <h4 class="docs-faq-q">Is my data sent to a server?</h4>
+        <p>No. All QR generation happens locally in your browser via <code>qr-code-styling</code>. The API endpoint exists for server-side generation via HTTP if you need it.</p>
+      </div>
+      <div class="docs-faq-item">
+        <h4 class="docs-faq-q">Can I use QRVerse offline?</h4>
+        <p>Once the page and CDN libraries are cached, the dashboard works fine without connection — generation is fully client-side.</p>
+      </div>
+      <div class="docs-faq-item">
+        <h4 class="docs-faq-q">What are error correction levels?</h4>
+        <p>QR codes include redundant data so they survive damage. L=7%, M=15%, Q=25%, H=30% redundancy. Pick H for logos or printed stickers that might get scratched.</p>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="docs-footer">
+      <p>QRVerse v1.0.0 — Built with Node.js, Express, HTML, CSS, and vanilla JavaScript.</p>
+      <p>© <span id="docsYear"></span> QRVerse. MIT Licensed.</p>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  // Set current year
+  document.getElementById('docsYear').textContent = new Date().getFullYear();
+
+  // Mobile sidebar toggle
+  const toggle = document.getElementById('docsSidebarToggle');
+  const sidebar = document.getElementById('docsSidebar');
+  const nav = document.getElementById('docsNav');
+  toggle.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+    nav.classList.toggle('show');
+  });
+
+  // Smooth scroll & close mobile nav on link click
+  nav.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      nav.classList.remove('show');
+      sidebar.classList.remove('open');
+    });
+  });
+
+  // Highlight active link on scroll
+  const sections = document.querySelectorAll('.docs-section');
+  const navLinks = document.querySelectorAll('.docs-nav-link');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + entry.target.id));
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "qrverse",
+  "version": "1.0.0",
+  "description": "QRVerse - Professional QR Code Generator with modern SaaS design",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "qr-code",
+    "qr-generator",
+    "qrverse",
+    "qr-code-generator"
+  ],
+  "author": "QRVerse",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "qrcode": "^1.5.3",
+    "qr-code-styling": "^1.6.0-rc.1",
+    "jspdf": "^2.5.1",
+    "html5-qrcode": "^2.3.8"
+  }
+}
