@@ -1860,9 +1860,49 @@ function setupEventListeners() {
     item.addEventListener('click', () => switchType(item.dataset.type));
   });
 
-  // Sidebar toggle for mobile
-  $('#sidebarToggle').addEventListener('click', () => {
-    $('#sidebar').classList.toggle('open');
+  // Sidebar drawer helpers (mobile)
+  const sidebar = $('#sidebar');
+  const overlay = $('#sidebarOverlay');
+
+  function openSidebar() {
+    sidebar.classList.add('open');
+    overlay?.classList.add('open');
+  }
+
+  function closeSidebar() {
+    sidebar.classList.remove('open');
+    overlay?.classList.remove('open');
+  }
+
+  // Toggle inside the sidebar (visible when drawer is open)
+  $('#sidebarToggle').addEventListener('click', closeSidebar);
+
+  // Toggle in the header — always reachable, even when drawer is closed
+  const mobileMenuToggle = $('#mobileMenuToggle');
+  mobileMenuToggle.addEventListener('click', () => {
+    if (sidebar.classList.contains('open')) {
+      closeSidebar();
+    } else {
+      openSidebar();
+    }
+  });
+
+  // Keep aria-expanded in sync so screen readers reflect drawer state
+  function syncAriaExpanded() {
+    mobileMenuToggle.setAttribute('aria-expanded', String(sidebar.classList.contains('open')));
+  }
+  const drawerObserver = new MutationObserver(syncAriaExpanded);
+  drawerObserver.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
+  syncAriaExpanded();
+
+  // Overlay click closes the drawer
+  overlay.addEventListener('click', closeSidebar);
+
+  // Close drawer after selecting a QR type on mobile
+  $$('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      if (window.innerWidth <= 768) closeSidebar();
+    });
   });
 
   // Generate button
@@ -2008,10 +2048,12 @@ function setupEventListeners() {
 
   // Click outside sidebar to close on mobile
   document.addEventListener('click', (e) => {
-    const sidebar = $('#sidebar');
-    if (window.innerWidth <= 768 && sidebar.classList.contains('open')) {
-      if (!sidebar.contains(e.target) && !$('#sidebarToggle').contains(e.target)) {
-        sidebar.classList.remove('open');
+    const s = $('#sidebar');
+    const ov = $('#sidebarOverlay');
+    if (window.innerWidth <= 768 && s.classList.contains('open')) {
+      if (!s.contains(e.target) && !e.target.closest('#mobileMenuToggle') && !e.target.closest('#sidebarOverlay')) {
+        s.classList.remove('open');
+        ov?.classList.remove('open');
       }
     }
   });

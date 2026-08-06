@@ -591,6 +591,40 @@ body::before {
   height: 20px;
 }
 
+/* Mobile menu toggle — visible only on small screens.
+   Lives in the dashboard header so it's always reachable,
+   even when the sidebar is slid off-screen. */
+.mobile-menu-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.mobile-menu-toggle:hover {
+  background: var(--card-bg-hover);
+  border-color: var(--primary-light);
+  color: var(--primary-light);
+}
+
+.mobile-menu-toggle svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Dark overlay behind the sidebar when open on mobile */
+.sidebar-overlay {
+  display: none;
+}
+
 .sidebar-section {
   flex: 1;
   overflow-y: auto;
@@ -1891,8 +1925,10 @@ body::before {
     left: 0;
     top: 0;
     transform: translateX(-100%);
-    width: 280px;
+    width: 300px;
+    max-width: 85vw;
     box-shadow: var(--shadow-lg);
+    z-index: 1200;
   }
 
   .sidebar.open {
@@ -1903,23 +1939,50 @@ body::before {
     display: block;
   }
 
+  .mobile-menu-toggle {
+    display: inline-flex;
+  }
+
+  /* Dark overlay behind the sidebar drawer on mobile */
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 1100;
+  }
+
+  .sidebar-overlay.open {
+    display: block;
+  }
+
   .main-content {
     padding: 16px;
   }
 
   .dashboard-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .page-title {
+    font-size: 20px;
+    flex: 1;
   }
 
   .header-actions {
     width: 100%;
+    flex-wrap: wrap;
   }
 
   .icon-btn {
     flex: 1;
     justify-content: center;
+    min-width: 80px;
+    padding: 10px 12px;
   }
 
   .customization-grid {
@@ -1968,6 +2031,17 @@ body::before {
 
   .action-row {
     grid-template-columns: 1fr;
+  }
+
+  .preview-container {
+    padding: 16px;
+  }
+
+  .preview-area {
+    width: 100%;
+    max-width: 280px;
+    height: auto;
+    aspect-ratio: 1;
   }
 
   .info-grid {
