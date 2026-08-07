@@ -637,7 +637,7 @@ function setupImageLinkForm() {
           throw new Error(result.error || 'Upload failed');
         }
 
-        state.imgLinkUrl = window.location.origin + result.url;
+        state.imgLinkUrl = result.isExternal ? result.url : window.location.origin + result.url;
         statusEl.textContent = 'Ready! The QR will link to this image.';
         showToast('Image uploaded successfully', 'success');
         updateQRCode();
