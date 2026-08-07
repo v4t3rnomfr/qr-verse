@@ -1344,40 +1344,21 @@ body::before {
 
 .qr-reader video {
   width: 100% !important;
-  height: 100% !important;
-  max-height: 320px;
-  object-fit: cover;
+  height: auto !important;
+  object-fit: contain;
   display: block;
+  background: #000;
 }
 
-/* Scan target frame — square matching the responsive qrbox */
-.scan-frame {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* html5-qrcode's built-in scan box — tone down the bright white corner
+   markers. (Do NOT hide the region — it's where pixels get captured.) */
+#qr-reader #qr-shaded-region {
+  border-color: rgba(0, 0, 0, 0.35) !important;
 }
 
-.scan-frame .scan-box {
-  position: relative;
-  width: 60%;
-  max-width: 250px;
-  aspect-ratio: 1;
+#qr-reader #qr-shaded-region > div {
+  background-color: rgba(99, 102, 241, 0.9) !important;
 }
-
-.scan-frame .corner {
-  position: absolute;
-  width: 36px;
-  height: 36px;
-  border: 3px solid rgba(99, 102, 241, 0.9);
-}
-
-.scan-frame .corner.tl { top: 0; left: 0; border-right: none; border-bottom: none; border-top-left-radius: 12px; }
-.scan-frame .corner.tr { top: 0; right: 0; border-left: none; border-bottom: none; border-top-right-radius: 12px; }
-.scan-frame .corner.bl { bottom: 0; left: 0; border-right: none; border-top: none; border-bottom-left-radius: 12px; }
-.scan-frame .corner.br { bottom: 0; right: 0; border-left: none; border-top: none; border-bottom-right-radius: 12px; }
 
 .btn-row {
   display: flex;
@@ -2263,16 +2244,6 @@ body::before {
 
   .qr-reader video {
     max-height: none;
-  }
-
-  .scan-frame .scan-box {
-    width: 70%;
-    max-width: 200px;
-  }
-
-  .scan-frame .corner {
-    width: 24px;
-    height: 24px;
   }
 }
 

@@ -1604,6 +1604,63 @@ function stopScanner() {
   return scanStopPromise;
 }
 
+/**
+ * Enumerates available cameras and returns a deviceId constraint for the
+ * requested facing direction. Returns null if enumeration is unavailable.
+ */
+async function getDeviceConstraint(preferFacingMode) {
+  try {
+    const cameras = await Html5Qrcode.getCameras();
+    if (!cameras || !cameras.length) return null;
+    const rear = preferFacingMode === 'environment';
+    const match = cameras.find(c => rear
+      ? /back|rear|environment/i.test(c.label)
+      : /front|user|selfie/i.test(c.label));
+    const chosen = match || cameras[0];
+    if (chosen && chosen.id) {
+      return { deviceId: { exact: chosen.id } };
+    }
+  } catch (e) {
+    console.warn('Camera enumeration failed:', e);
+  }
+  return null;
+}
+
+async function startCamera(html5QrCode, facingMode, config) {
+  try {
+    // First attempt: plain facingMode — no extra permission prompt.
+    await html5QrCode.start(
+      { facingMode },
+      config,
+      (decodedText) => {
+        showScanResult(true, decodedText);
+        stopScanner();
+      },
+      () => {} // Per-frame errors ignored — decoding continues
+    );
+    return;
+  } catch (err) {
+    console.warn('facingMode start failed, trying deviceId:', err);
+  }
+
+  // Second attempt: enumerated device id (most reliable on phones).
+  const deviceConstraint = await getDeviceConstraint(facingMode);
+  if (deviceConstraint) {
+    await html5QrCode.start(
+      deviceConstraint,
+      config,
+      (decodedText) => {
+        showScanResult(true, decodedText);
+        stopScanner();
+      },
+      () => {}
+    );
+    return;
+  }
+
+  throw new Error('No camera could be started.');
+}
+
 function startScanner() {
   const readerEl = $('#qr-reader');
   readerEl.innerHTML = '';
@@ -1618,17 +1675,8 @@ function startScanner() {
     try {
       $('#scanResult').classList.add('hidden');
       html5QrCode = new Html5Qrcode('qr-reader');
-      // No qrbox: html5-qrcode scans the whole video frame, so off-center
-      // codes still decode and its built-in shaded region is never created.
-      await html5QrCode.start(
-        { facingMode: currentFacingMode },
-        { fps: 10 },
-        (decodedText) => {
-          showScanResult(true, decodedText);
-          stopScanner();
-        },
-        () => {} // Per-frame errors ignored — decoding continues
-      );
+      const config = { fps: 10, qrbox: { width: 200, height: 200 } };
+      await startCamera(html5QrCode, currentFacingMode, config);
       isScanning = true;
       const startBtn = $('#startScanBtn');
       startBtn.innerHTML = `
@@ -1643,7 +1691,7 @@ function startScanner() {
       if (flipBtn) flipBtn.classList.remove('hidden');
     } catch (err) {
       console.error('Scanner error:', err);
-      showToast('Could not access camera. Check permissions and try again.', 'error');
+      showToast('Could not access camera: ' + (err && err.message ? err.message : 'check permissions'), 'error');
       isScanning = false;
     }
   });
