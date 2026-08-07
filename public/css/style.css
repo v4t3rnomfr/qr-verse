@@ -1507,32 +1507,29 @@ body::before {
 }
 
 .scan-preview-remove {
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  width: 28px;
-  height: 28px;
+  flex-shrink: 0;
+  margin-left: auto;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   border: none;
   border-radius: 50%;
-  background: var(--bg-secondary);
+  background: transparent;
   color: var(--text-secondary);
   cursor: pointer;
-  box-shadow: var(--shadow-md);
   transition: all var(--transition-fast);
 }
 
 .scan-preview-remove:hover {
-  background: rgba(239, 68, 68, 0.2);
+  background: rgba(239, 68, 68, 0.15);
   color: var(--error);
-  transform: rotate(90deg);
 }
 
 .scan-preview-remove svg {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
 }
 
 .scan-progress {
