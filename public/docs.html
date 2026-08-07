@@ -28,32 +28,35 @@
       <span>QRVerse <em>Docs</em></span>
     </a>
     <nav class="docs-header-nav">
+      <button type="button" class="docs-sidebar-toggle" id="docsSidebarToggle" aria-label="Toggle documentation navigation" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 6h18M3 12h18M3 18h18"/>
+        </svg>
+        <span>Docs Menu</span>
+      </button>
       <a href="/" class="docs-header-link">← Back to App</a>
       <span class="docs-version">v1.0.0</span>
     </nav>
   </div>
 </header>
 
+<!-- Scroll progress bar -->
+<div class="docs-scroll-progress" id="docsProgress"></div>
+
 <div class="docs-layout">
 
   <!-- ===== Sidebar Navigation ===== -->
   <aside class="docs-sidebar" id="docsSidebar">
-    <button class="docs-sidebar-toggle" id="docsSidebarToggle" aria-label="Toggle documentation navigation">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M3 6h18M3 12h18M3 18h18"/>
-      </svg>
-      <span>Docs Menu</span>
-    </button>
     <nav class="docs-nav" id="docsNav">
       <div class="docs-nav-group">
-        <p class="docs-nav-group-title">Getting Started</p>
+        <button type="button" class="docs-nav-group-title" aria-expanded="true">Getting Started</button>
         <a href="#overview" class="docs-nav-link">Overview</a>
         <a href="#quickstart" class="docs-nav-link">Quick Start</a>
         <a href="#interface" class="docs-nav-link">Interface Guide</a>
       </div>
 
       <div class="docs-nav-group">
-        <p class="docs-nav-group-title">QR Code Types</p>
+        <button type="button" class="docs-nav-group-title" aria-expanded="true">QR Code Types</button>
         <a href="#type-text" class="docs-nav-link">📝 Text</a>
         <a href="#type-url" class="docs-nav-link">🔗 URL</a>
         <a href="#type-wifi" class="docs-nav-link">📶 WiFi</a>
@@ -68,7 +71,7 @@
       </div>
 
       <div class="docs-nav-group">
-        <p class="docs-nav-group-title">Design & Output</p>
+        <button type="button" class="docs-nav-group-title" aria-expanded="true">Design & Output</button>
         <a href="#customization" class="docs-nav-link">Customization</a>
         <a href="#logo-upload" class="docs-nav-link">Logo Upload</a>
         <a href="#downloads" class="docs-nav-link">Download Formats</a>
@@ -76,20 +79,20 @@
       </div>
 
       <div class="docs-nav-group">
-        <p class="docs-nav-group-title">Features</p>
+        <button type="button" class="docs-nav-group-title" aria-expanded="true">Features</button>
         <a href="#history" class="docs-nav-link">History & Favorites</a>
         <a href="#shortcuts" class="docs-nav-link">Keyboard Shortcuts</a>
       </div>
 
       <div class="docs-nav-group">
-        <p class="docs-nav-group-title">Developers</p>
+        <button type="button" class="docs-nav-group-title" aria-expanded="true">Developers</button>
         <a href="#api" class="docs-nav-link">REST API Reference</a>
         <a href="#localstorage" class="docs-nav-link">Browser Storage</a>
         <a href="#faq" class="docs-nav-link">FAQ</a>
       </div>
 
       <div class="docs-nav-group">
-        <p class="docs-nav-group-title">QrVerse CDN Scanner</p>
+        <button type="button" class="docs-nav-group-title" aria-expanded="true">QrVerse CDN Scanner</button>
         <a href="#cdn-overview" class="docs-nav-link">Overview</a>
         <a href="#cdn-install" class="docs-nav-link">Installation (script tag)</a>
         <a href="#cdn-api" class="docs-nav-link">API Reference</a>
@@ -97,6 +100,9 @@
       </div>
     </nav>
   </aside>
+
+  <!-- Mobile drawer overlay -->
+  <div class="docs-overlay" id="docsOverlay"></div>
 
   <!-- ===== Main Content ===== -->
   <main class="docs-content">
@@ -793,21 +799,43 @@ const res = await QrVerse.scanImageData(data, width, height);</code></pre>
   // Set current year
   document.getElementById('docsYear').textContent = new Date().getFullYear();
 
-  // Mobile sidebar toggle
+  // Scroll progress bar
+  const progress = document.getElementById('docsProgress');
+  window.addEventListener('scroll', () => {
+    const el = document.documentElement;
+    const max = el.scrollHeight - el.clientHeight;
+    progress.style.width = (max > 0 ? (el.scrollTop / max) * 100 : 0) + '%';
+  }, { passive: true });
+
+  // Mobile drawer toggle (sidebar + overlay)
   const toggle = document.getElementById('docsSidebarToggle');
   const sidebar = document.getElementById('docsSidebar');
+  const overlay = document.getElementById('docsOverlay');
   const nav = document.getElementById('docsNav');
+  const closeDrawer = () => {
+    sidebar.classList.remove('open');
+    if (overlay) overlay.classList.remove('active');
+    if (toggle) toggle.setAttribute('aria-expanded', 'false');
+  };
   toggle.addEventListener('click', () => {
-    sidebar.classList.toggle('open');
-    nav.classList.toggle('show');
+    const opening = sidebar.classList.toggle('open');
+    if (overlay) overlay.classList.toggle('active', opening);
+    toggle.setAttribute('aria-expanded', opening ? 'true' : 'false');
+  });
+  if (overlay) overlay.addEventListener('click', closeDrawer);
+
+  // Collapsible nav groups
+  nav.querySelectorAll('.docs-nav-group-title').forEach(title => {
+    title.addEventListener('click', () => {
+      const group = title.closest('.docs-nav-group');
+      const collapsed = group.classList.toggle('collapsed');
+      title.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+    });
   });
 
-  // Smooth scroll & close mobile nav on link click
+  // Smooth scroll & close drawer on link click
   nav.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-      nav.classList.remove('show');
-      sidebar.classList.remove('open');
-    });
+    link.addEventListener('click', closeDrawer);
   });
 
   // Highlight active link on scroll
