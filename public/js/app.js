@@ -1620,7 +1620,10 @@ function startScanner() {
       html5QrCode = new Html5Qrcode('qr-reader');
       await html5QrCode.start(
         { facingMode: currentFacingMode },
-        { fps: 10, qrbox: { width: 200, height: 200 } },
+        { fps: 10, qrbox: (vw, vh) => {
+            const size = Math.min(Math.floor(vw * 0.6), Math.floor(vh * 0.6), 250);
+            return { width: size, height: size };
+          } },
         (decodedText) => {
           showScanResult(true, decodedText);
           stopScanner();

@@ -1350,11 +1350,21 @@ body::before {
   display: block;
 }
 
-/* Scan target frame */
+/* Scan target frame — square matching the responsive qrbox */
 .scan-frame {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scan-frame .scan-box {
+  position: relative;
+  width: 60%;
+  max-width: 250px;
+  aspect-ratio: 1;
 }
 
 .scan-frame .corner {
@@ -1364,10 +1374,10 @@ body::before {
   border: 3px solid rgba(99, 102, 241, 0.9);
 }
 
-.scan-frame .corner.tl { top: 20px; left: 20px; border-right: none; border-bottom: none; border-top-left-radius: 12px; }
-.scan-frame .corner.tr { top: 20px; right: 20px; border-left: none; border-bottom: none; border-top-right-radius: 12px; }
-.scan-frame .corner.bl { bottom: 20px; left: 20px; border-right: none; border-top: none; border-bottom-left-radius: 12px; }
-.scan-frame .corner.br { bottom: 20px; right: 20px; border-left: none; border-top: none; border-bottom-right-radius: 12px; }
+.scan-frame .corner.tl { top: 0; left: 0; border-right: none; border-bottom: none; border-top-left-radius: 12px; }
+.scan-frame .corner.tr { top: 0; right: 0; border-left: none; border-bottom: none; border-top-right-radius: 12px; }
+.scan-frame .corner.bl { bottom: 0; left: 0; border-right: none; border-top: none; border-bottom-left-radius: 12px; }
+.scan-frame .corner.br { bottom: 0; right: 0; border-left: none; border-top: none; border-bottom-right-radius: 12px; }
 
 .btn-row {
   display: flex;
@@ -2255,9 +2265,14 @@ body::before {
     max-height: none;
   }
 
+  .scan-frame .scan-box {
+    width: 70%;
+    max-width: 200px;
+  }
+
   .scan-frame .corner {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
   }
 }
 
