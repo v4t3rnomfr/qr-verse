@@ -68,6 +68,30 @@ async function main() {
     console.log('Blank image rejected as expected:', e.code, '-', e.message);
   }
 
+  // generate exists in the API surface
+  if (typeof sandbox.QrVerse.generate !== 'function') {
+    console.error('FAIL: QrVerse.generate is not a function');
+    process.exit(1);
+  }
+  console.log('generate() present as expected');
+
+  // In pure Node (no DOM), generate must reject cleanly — not crash the bundle.
+  try {
+    await sandbox.QrVerse.generate('hello');
+    console.log('note: generate() resolved (DOM shim available)');
+  } catch (e) {
+    console.log('generate() rejected gracefully in Node:', e.code, '-', e.message);
+  }
+
+  // generate must reject when data is empty
+  try {
+    await sandbox.QrVerse.generate('   ');
+    console.error('FAIL: expected SOURCE_ERROR for empty data');
+    process.exit(1);
+  } catch (e) {
+    console.log('Empty data rejected as expected:', e.code, '-', e.message);
+  }
+
   console.log('SMOKE TEST PASSED');
 }
 

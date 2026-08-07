@@ -1,14 +1,16 @@
 /**
- * QRVerse CDN Scanner — wrapper source (pre-bundle).
+ * QRVerse CDN SDK — wrapper source (pre-bundle).
  *
- * This file is concatenated AFTER the bundled jsQR UMD (dist/jsQR.js) by
- * build-cdn.js, so the global `jsQR` decoder is already available on the root
- * object. It exposes a friendly Promise-based API under the `QrVerse` namespace.
+ * This file is concatenated AFTER the bundled jsQR UMD (dist/jsQR.js) and the
+ * qr-code-styling UMD (lib/qr-code-styling.js) by build-cdn.js, so the globals
+ * `jsQR` (decoder) and `QRCodeStyling` (generator) are already available on the
+ * root object. It exposes a friendly Promise-based API under the `QrVerse`
+ * namespace with both `scan` and `generate` support.
  *
  * Browser usage:
  *   <script src="https://cdn.jsdelivr.net/gh/v4t3rnomfr/qr-verse@master/cdn/qrverse.js"></script>
- *   const result = await QrVerse.scan(myImage);
- *   console.log(result.data); // decoded text
+ *   const result = await QrVerse.scan(myImage);              // scan a QR image
+ *   const qr = await QrVerse.generate('https://example.com'); // generate a PNG QR
  */
 
 (function IIFE(root) {
@@ -136,6 +138,45 @@
     return null;
   }
 
+  function getGenerator() {
+    var g = root.QRCodeStyling;
+    if (typeof g === 'function') return g;
+    return null;
+  }
+
+  function blobToDataURL(blob) {
+    return new Promise(function (resolve, reject) {
+      if (typeof FileReader === 'undefined') {
+        reject(QrVerseError('FileReader is not available in this environment.', 'GENERATE_ERROR'));
+        return;
+      }
+      var reader = new FileReader();
+      reader.onload = function () { resolve(reader.result); };
+      reader.onerror = function () { reject(QrVerseError('Could not read the generated QR data.', 'GENERATE_ERROR')); };
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  // Convert any supported image input (File/Blob/URL/img/canvas) to a data URL
+  // so it can be embedded as a center logo by the generator.
+  function sourceToDataURL(input) {
+    return resolveSource(input).then(function (src) {
+      if (typeof document === 'undefined') {
+        throw QrVerseError('Canvas is required to embed a logo image.', 'GENERATE_ERROR');
+      }
+      var w0 = (typeof src.naturalWidth === 'number' && src.naturalWidth) || src.videoWidth || src.width || 0;
+      var h0 = (typeof src.naturalHeight === 'number' && src.naturalHeight) || src.videoHeight || src.height || 0;
+      if (!w0 || !h0) { throw QrVerseError('Logo image has no drawable dimensions.', 'SOURCE_ERROR'); }
+      var maxDim = 400;
+      var scale = Math.min(1, maxDim / Math.max(w0, h0));
+      var canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(w0 * scale));
+      canvas.height = Math.max(1, Math.round(h0 * scale));
+      canvas.getContext('2d').drawImage(src, 0, 0, canvas.width, canvas.height);
+      return canvas.toDataURL('image/png');
+    });
+  }
+
   var QrVerse = {
     version: VERSION,
 
@@ -187,10 +228,113 @@
     /** Convenience: scan a File / Blob. */
     scanFile: function (file, options) { return QrVerse.scan(file, options); },
     /** Convenience: scan by URL or data URL. */
-    scanUrl: function (url, options) { return QrVerse.scan(url, options); }
+    scanUrl: function (url, options) { return QrVerse.scan(url, options); },
+
+    /**
+     * Generate a QR code as a PNG/SVG data URL, mirroring the QRVerse app
+     * customization options. Optionally embeds a center logo image.
+     * @param {string} text  Data to encode
+     * @param {Object} [options]
+     *   { width, margin, format ('png'|'svg'), color, background, transparent,
+     *     dots ('square'|'rounded'|'circle'), eye ('square'|'circle'|'rounded'),
+     *     eyeColor, errorCorrectionLevel ('L'|'M'|'Q'|'H'),
+     *     gradient: { type:'linear'|'radial', rotation, color1, color2, color3,
+     *                 colorStops:[{offset,color}], applyToEyes },
+     *     logo: (File|Blob|URL|img|canvas), logoSize (0-100) }
+     * @returns {Promise<Object>} { success, data (data URL), type, width }
+     */
+    generate: function (text, options) {
+      options = options || {};
+      var generator = getGenerator();
+      return new Promise(function (resolve, reject) {
+        if (!generator) { reject(QrVerseError('QR generator is not available.', 'GENERATOR_UNAVAILABLE')); return; }
+        if (typeof text !== 'string' || !text.trim()) {
+          reject(QrVerseError('QR data (text) is required.', 'SOURCE_ERROR')); return;
+        }
+
+        var width = parseInt(options.width, 10) || 300;
+        var margin = options.margin === undefined ? 4 : (parseInt(options.margin, 10) || 0);
+        var format = (options.format || 'png').toLowerCase();
+        if (format !== 'png' && format !== 'svg') format = 'png';
+
+        var color = options.color || '#000000';
+        var background = options.transparent ? 'transparent' : (options.background || '#ffffff');
+        var eyeColor = options.eyeColor || color;
+
+        var dotStyleMap = { square: 'square', rounded: 'rounded', circle: 'extra-rounded' };
+        var eyeStyleMap = { square: 'square', circle: 'dot', rounded: 'extra-rounded' };
+        var dotType = dotStyleMap[options.dots] || options.dots || 'square';
+        var eyeType = eyeStyleMap[options.eye] || options.eye || 'square';
+
+        var config = {
+          width: width,
+          height: width,
+          margin: margin,
+          type: 'canvas',
+          data: text,
+          dotsOptions: { color: color, type: dotType },
+          backgroundOptions: { color: background },
+          cornersSquareOptions: { color: eyeColor, type: eyeType },
+          cornersDotOptions: { color: eyeColor, type: eyeType },
+          qrOptions: { errorCorrectionLevel: options.errorCorrectionLevel || 'M' }
+        };
+
+        if (options.gradient) {
+          var g = options.gradient;
+          var gradient = {
+            type: g.type === 'radial' ? 'radial' : 'linear',
+            colorStops: (g.colorStops && g.colorStops.length) ? g.colorStops : [
+              { offset: 0, color: g.color1 || color },
+              { offset: 0.5, color: g.color2 || color },
+              { offset: 1, color: g.color3 || g.color2 || color }
+            ]
+          };
+          if (gradient.type === 'linear' && typeof g.rotation === 'number') {
+            gradient.rotation = g.rotation * Math.PI / 180;
+          }
+          config.dotsOptions.gradient = gradient;
+          if (g.applyToEyes !== false) {
+            config.cornersSquareOptions.gradient = gradient;
+            config.cornersDotOptions.gradient = gradient;
+          }
+        }
+
+        var logoPromise;
+        if (options.logo) {
+          var imageOptions = {
+            crossOrigin: 'anonymous',
+            margin: 4,
+            hideBackgroundDots: true,
+            imageSize: (parseInt(options.logoSize, 10) || 20) / 100
+          };
+          logoPromise = sourceToDataURL(options.logo).then(function (dataUrl) {
+            config.image = dataUrl;
+            config.imageOptions = imageOptions;
+          });
+        } else {
+          logoPromise = Promise.resolve();
+        }
+
+        logoPromise.then(function () {
+          try {
+            var qr = new generator(config);
+            qr.getRawData(format).then(function (blob) {
+              blobToDataURL(blob).then(function (dataUrl) {
+                resolve({ success: true, data: dataUrl, type: format, width: width });
+              }, reject);
+            }, function (e) {
+              reject(e instanceof QrVerseError ? e : QrVerseError('Failed to generate QR code.', 'GENERATE_ERROR'));
+            });
+          } catch (e) {
+            reject(e instanceof QrVerseError ? e : QrVerseError('Failed to generate QR code.', 'GENERATE_ERROR'));
+          }
+        }, reject);
+      });
+    }
   };
 
   root.QrVerse = QrVerse;
   root.QrVerseDecoder = getDecoder();
+  root.QrVerseStyling = getGenerator();
   root.QrVerseError = QrVerseError;
 })(typeof self !== 'undefined' ? self : (typeof window !== 'undefined' ? window : globalThis));

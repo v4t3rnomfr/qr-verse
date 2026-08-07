@@ -2,8 +2,9 @@
  * build:cdn — Produces the self-contained CDN bundle(s) in /cdn.
  *
  * Strategy: bundle jsQR's UMD (which registers the global `jsQR` decoder)
- * together with the small QrVerse wrapper. Resulting file needs no network
- * or build-time dependencies at runtime — just drop it in a <script> tag.
+ * and qr-code-styling's UMD (which registers the global `QRCodeStyling`
+ * generator) together with the small QrVerse wrapper. Resulting file needs no
+ * network or build-time dependencies at runtime — just drop it in a <script> tag.
  *
  * Output:
  *   cdn/qrverse.js        (readable bundle)
@@ -28,13 +29,14 @@ async function build() {
   const version = pkg.version;
 
   const jsQR = read('node_modules/jsqr/dist/jsQR.js');
+  const qrStyling = read('node_modules/qr-code-styling/lib/qr-code-styling.js');
   let wrapper = read('src/qr.js');
   wrapper = wrapper.split('__QRVERSE_VERSION__').join(version);
 
   const header =
-    '/*! QrVerse CDN Scanner v' + version + ' (MIT) | https://github.com/v4t3rnomfr/qr-verse */\n';
+    '/*! QrVerse CDN SDK v' + version + ' (MIT) | https://github.com/v4t3rnomfr/qr-verse */\n';
 
-  const full = header + jsQR + '\n' + wrapper + '\n';
+  const full = header + jsQR + '\n' + qrStyling + '\n' + wrapper + '\n';
 
   const outDir = path.join(ROOT, 'cdn');
   if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
@@ -44,7 +46,7 @@ async function build() {
   const minified = await terser.minify(full, {
     compress: { passes: 2 },
     mangle: true,
-    format: { beautify: false, comments: /QrVerse CDN Scanner/ }
+    format: { beautify: false, comments: /QrVerse CDN SDK/ }
   });
 
   if (minified.error) {

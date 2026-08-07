@@ -29,11 +29,29 @@
   </div>
 
   <div class="card">
-    <label>Scan by URL / data URL</label>
+    <label for="dataUrl">Scan by URL / data URL</label>
     <input id="dataUrl" type="text" placeholder="data:image/png;base64,...." style="width:100%;padding:8px;box-sizing:border-box">
     <button id="scanUrl" style="margin-top:8px">QrVerse.scanUrl(value)</button>
     <pre id="scanUrlResult">—</pre>
   </div>
+
+  <div class="card">
+    <label for="genText">Generate a QR code</label>
+    <input id="genText" type="text" value="https://qrverse.dev" style="width:100%;padding:8px;box-sizing:border-box">
+    <label for="genColor" style="margin-top:10px">Foreground color</label>
+    <input id="genColor" type="color" value="#6366f1" style="width:56px;height:34px;padding:2px;border:1px solid #262f4d;border-radius:8px;background:#0e1327">
+    <label for="genDots" style="margin-top:10px">Dot style</label>
+    <select id="genDots" style="width:100%;padding:8px;background:#0e1327;color:#e8ecf7;border:1px solid #262f4d;border-radius:8px">
+      <option value="square">Square</option>
+      <option value="rounded">Rounded</option>
+      <option value="circle">Circle</option>
+    </select>
+    <button id="gen" style="margin-top:8px">QrVerse.generate(text)</button>
+    <img id="genPreview" alt="Generated QR" style="display:block;width:220px;height:220px;margin-top:12px;background:#fff;border-radius:8px;padding:6px">
+    <pre id="genResult">—</pre>
+    <button id="genScan" style="margin-top:8px" disabled>Scan it back (round-trip)</button>
+  </div>
+
 
   <script src="https://cdn.jsdelivr.net/gh/v4t3rnomfr/qr-verse@master/cdn/qrverse.min.js"></script>
   <script>
@@ -42,6 +60,8 @@
       var cheats = {
         hasQrVerse: typeof QrVerse !== 'undefined',
         hasDecoder: typeof QrVerse !== 'undefined' && typeof QrVerseDecoder === 'function',
+        hasStyling: typeof QrVerse !== 'undefined' && typeof QrVerseStyling === 'function',
+        hasGenerate: typeof QrVerse !== 'undefined' && typeof QrVerse.generate === 'function',
         version: typeof QrVerse !== 'undefined' ? QrVerse.version : null,
       };
       api.textContent = JSON.stringify(cheats, null, 2);
@@ -72,6 +92,39 @@
         output('scanUrlResult', 'OK data: "' + res.data + '"');
       } catch (e) {
         output('scanUrlResult', 'ERR: ' + (e && e.message) + ' (code=' + (e && e.code) + ')', true);
+      }
+    });
+
+    var generatedDataUrl = null;
+    document.getElementById('gen').addEventListener('click', async function () {
+      var text = document.getElementById('genText').value.trim();
+      if (!text) { output('genResult', 'Enter some text first.', true); return; }
+      output('genResult', 'Generating…');
+      document.getElementById('genScan').disabled = true;
+      try {
+        var res = await QrVerse.generate(text, {
+          width: 300,
+          color: document.getElementById('genColor').value,
+          dots: document.getElementById('genDots').value,
+          errorCorrectionLevel: 'H'
+        });
+        generatedDataUrl = res.data;
+        document.getElementById('genPreview').src = generatedDataUrl;
+        document.getElementById('genScan').disabled = false;
+        output('genResult', 'OK ' + res.type + ' ' + res.width + 'x' + res.width);
+      } catch (e) {
+        output('genResult', 'ERR: ' + (e && e.message) + ' (code=' + (e && e.code) + ')', true);
+      }
+    });
+
+    document.getElementById('genScan').addEventListener('click', async function () {
+      if (!generatedDataUrl) return;
+      output('genResult', 'Scanning back…');
+      try {
+        var res = await QrVerse.scanUrl(generatedDataUrl);
+        output('genResult', 'ROUND-TRIP OK: "' + res.data + '"');
+      } catch (e) {
+        output('genResult', 'Round-trip ERR: ' + (e && e.message) + ' (code=' + (e && e.code) + ')', true);
       }
     });
 

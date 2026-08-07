@@ -92,7 +92,7 @@
       </div>
 
       <div class="docs-nav-group">
-        <button type="button" class="docs-nav-group-title" aria-expanded="true">QrVerse CDN Scanner</button>
+        <button type="button" class="docs-nav-group-title" aria-expanded="true">QrVerse CDN SDK</button>
         <a href="#cdn-overview" class="docs-nav-link">Overview</a>
         <a href="#cdn-install" class="docs-nav-link">Installation (script tag)</a>
         <a href="#cdn-api" class="docs-nav-link">API Reference</a>
@@ -627,21 +627,23 @@ sms:+1234567890?body=Text%20me%20back
       </div>
     </section>
 
-    <!-- QrVerse CDN Scanner -->
+    <!-- QrVerse CDN SDK -->
     <section class="docs-section" id="cdn-overview">
-      <h2 class="docs-h2">🔌 QrVerse CDN Scanner</h2>
+      <h2 class="docs-h2">🔌 QrVerse CDN SDK</h2>
       <p>
-        QRVerse ships a <strong>self-contained, 100% client-side</strong> QR scanning library that anyone can add
-        to an existing project with a single <code>&lt;script&gt;</code> tag. Given an image containing a QR code,
-        it decodes the payload locally in the browser — no backend, no API key, no extra dependencies.
+        QRVerse ships a <strong>self-contained, 100% client-side</strong> QR SDK that anyone can add
+        to an existing project with a single <code>&lt;script&gt;</code> tag. It can <strong>generate</strong>
+        fully styled QR codes (colors, gradients, dot/eye shapes, center logo) and <strong>scan</strong>
+        QR codes from an image — both locally in the browser, no backend, no API key, no extra dependencies.
       </p>
 
       <div class="docs-callout docs-callout-info">
         <strong>Why use the CDN build?</strong>
         <p>
-          Everything runs on the visitor's device. The bundle combines the <code>jsQR</code> decoder with a tiny
-          wrapper, so images never leave the browser. Perfect for plugins, widgets, web apps, and tools where you
-          want to read QR codes from uploaded files or webcam frames.
+          Everything runs on the visitor's device. The bundle combines the <code>jsQR</code> decoder and the
+          <code>qr-code-styling</code> generator with a tiny wrapper, so images never leave the browser. Perfect for
+          plugins, widgets, web apps, and tools where you want to read QR codes from uploaded files or webcam frames —
+          and render your own branded QR codes.
         </p>
       </div>
     </section>
@@ -651,7 +653,7 @@ sms:+1234567890?body=Text%20me%20back
       <h3 class="docs-h3">⚙️ Installation</h3>
       <p>Add one script tag. Choose the minified build for production.</p>
 
-      <h5 class="docs-h5">Minified (recommended, ~130 KB)</h5>
+      <h5 class="docs-h5">Minified (recommended, ~180 KB)</h5>
       <div class="docs-code">
 <pre><code>&lt;script src="https://cdn.jsdelivr.net/gh/v4t3rnomfr/qr-verse@master/cdn/qrverse.min.js"&gt;&lt;/script&gt;</code></pre>
       </div>
@@ -675,6 +677,39 @@ sms:+1234567890?body=Text%20me%20back
     <section class="docs-section" id="cdn-api">
       <h3 class="docs-h3">🧑‍💻 API Reference</h3>
 
+      <h4 class="docs-h4"><code>QrVerse.generate(text, options?) → Promise&lt;GenerateResult&gt;</code></h4>
+      <p>Generates a styled QR code and resolves to a PNG/SVG <strong>data URL</strong> you can set as <code>&lt;img src&gt;</code>.</p>
+
+      <table class="docs-table">
+        <tr><th>Option</th><th>Default</th><th>Description</th></tr>
+        <tr><td><code>text</code></td><td>—</td><td><strong>Required.</strong> Data to encode.</td></tr>
+        <tr><td><code>width</code></td><td><code>300</code></td><td>QR size in px (square).</td></tr>
+        <tr><td><code>margin</code></td><td><code>4</code></td><td>Quiet-zone margin in px.</td></tr>
+        <tr><td><code>format</code></td><td><code>'png'</code></td><td>Output: <code>'png'</code> or <code>'svg'</code>.</td></tr>
+        <tr><td><code>color</code></td><td><code>'#000000'</code></td><td>Foreground (dots + eyes) color.</td></tr>
+        <tr><td><code>background</code></td><td><code>'#ffffff'</code></td><td>Background color.</td></tr>
+        <tr><td><code>transparent</code></td><td><code>false</code></td><td>Transparent background.</td></tr>
+        <tr><td><code>dots</code></td><td><code>'square'</code></td><td>Dot style: <code>'square'</code>, <code>'rounded'</code>, <code>'circle'</code>.</td></tr>
+        <tr><td><code>eye</code></td><td><code>'square'</code></td><td>Eye style: <code>'square'</code>, <code>'circle'</code>, <code>'rounded'</code>.</td></tr>
+        <tr><td><code>eyeColor</code></td><td><code>color</code></td><td>Eye color override.</td></tr>
+        <tr><td><code>errorCorrectionLevel</code></td><td><code>'M'</code></td><td><code>'L'</code>, <code>'M'</code>, <code>'Q'</code>, <code>'H'</code> (use <code>'H'</code> with a logo).</td></tr>
+        <tr><td><code>gradient</code></td><td>—</td><td><code>{ type, rotation, color1, color2, color3, colorStops, applyToEyes }</code></td></tr>
+        <tr><td><code>logo</code></td><td>—</td><td>Center logo: <code>File</code>/<code>Blob</code>, URL/data URL, <code>&lt;img&gt;</code>, or <code>&lt;canvas&gt;</code>.</td></tr>
+        <tr><td><code>logoSize</code></td><td><code>20</code></td><td>Logo size as % of QR width.</td></tr>
+      </table>
+
+      <p>Gradient shape: <code>{ type: 'linear'|'radial', rotation: 45, color1, color2, color3, colorStops: [{offset, color}], applyToEyes: true }</code> — provide either <code>color1/2/3</code> or a full <code>colorStops</code> array.</p>
+
+      <h4 class="docs-h4">Generate result</h4>
+      <div class="docs-code">
+<pre><code>{
+  "success": true,
+  "data": "data:image/png;base64,...",   // PNG or SVG data URL — set as &lt;img src&gt;
+  "type": "png",                          // "png" | "svg"
+  "width": 300
+}</code></pre>
+      </div>
+
       <h4 class="docs-h4"><code>QrVerse.scan(input, options?) → Promise&lt;Result&gt;</code></h4>
       <p>Scans any supported image source and returns the decoded data. <strong>Input</strong> can be:</p>
       <ul class="docs-list">
@@ -690,7 +725,7 @@ sms:+1234567890?body=Text%20me%20back
         <tr><td><code>inversionAttempts</code></td><td><code>'attemptBoth'</code></td><td><code>'attemptBoth'</code>, <code>'dontInvert'</code>, or <code>true</code>.</td></tr>
       </table>
 
-      <h4 class="docs-h4">Resolved value</h4>
+      <h4 class="docs-h4">Scan resolved value</h4>
       <div class="docs-code">
 <pre><code>{
   "success": true,
@@ -719,6 +754,26 @@ sms:+1234567890?body=Text%20me%20back
     <!-- CDN examples -->
     <section class="docs-section" id="cdn-examples">
       <h3 class="docs-h3">🧪 Examples</h3>
+
+      <h4 class="docs-h4">Generate a styled QR with a gradient + logo</h4>
+      <div class="docs-code">
+<pre><code>&lt;input type="file" id="logo" accept="image/*"&gt;
+&lt;input type="text" id="text" value="https://example.com"&gt;
+&lt;img id="out"&gt;
+&lt;script src="https://cdn.jsdelivr.net/gh/v4t3rnomfr/qr-verse@master/cdn/qrverse.min.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  document.getElementById('logo').addEventListener('change', async (e) =&gt; {
+    if (!e.target.files[0]) return;
+    const qr = await QrVerse.generate(document.getElementById('text').value, {
+      gradient: { type: 'linear', rotation: 45, color1: '#6366f1', color2: '#a855f7', color3: '#ec4899' },
+      logo: e.target.files[0],
+      logoSize: 18,
+      errorCorrectionLevel: 'H'
+    });
+    document.getElementById('out').src = qr.data;
+  });
+&lt;/script&gt;</code></pre>
+      </div>
 
       <h4 class="docs-h4">Scan a file from an input</h4>
       <div class="docs-code">
@@ -752,7 +807,7 @@ const res = await QrVerse.scanImageData(data, width, height);</code></pre>
       </div>
 
       <div class="docs-callout docs-callout-info">
-        <strong>Try it live:</strong> open <code>test/cdn-test.html</code> for a working, interactive test page — it loads the live CDN build and lets you scan a file or paste a data URL.
+        <strong>Try it live:</strong> open <code>test/cdn-test.html</code> for a working, interactive test page — it loads the live CDN build, lets you generate a styled QR, scan a file, and verify the generate → scan round-trip.
       </div>
     </section>
 

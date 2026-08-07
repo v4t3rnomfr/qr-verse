@@ -2,12 +2,12 @@
 
 QRVerse is a premium, modern QR code generator built with Node.js, Express.js, HTML5, CSS3, and Vanilla JavaScript. Create beautiful, fully customizable QR codes with a polished SaaS-grade user experience.
 
-> **Two products in one repo:** the interactive **[QR generator](#usage)** and the **[QR scanning CDN SDK](#cdn-scanner-library)** that anyone can embed in their own project with a single script tag.
+> **Two products in one repo:** the interactive **[QR generator](#usage)** and the **[QR CDN SDK](#cdn-sdk-library)** that anyone can embed in their own project with a single script tag — to generate *and* scan QR codes.
 
 ## Table of Contents
 
 - [Features](#features)
-- [CDN Scanner Library](#cdn-scanner-library)
+- [CDN SDK Library](#cdn-sdk-library)
 - [Installation](#installation)
 - [Deploy on Vercel](#deploy-on-vercel-recommended)
 - [Usage](#usage)
@@ -94,9 +94,9 @@ QRVerse is a premium, modern QR code generator built with Node.js, Express.js, H
 - Focus visible indicators
 - Reduced motion support
 
-## CDN Scanner Library
+## CDN SDK Library
 
-QRVerse ships a **self-contained, client-side SDK** that anyone can drop into an existing project via jsDelivr to decode QR codes from an image. Add one `<script>` tag, pass an image, get the decoded data. No backend, no API key, no build step — and images are never uploaded (scanning is 100% in-browser).
+QRVerse ships a **self-contained, client-side SDK** that anyone can drop into an existing project via jsDelivr to **generate** styled QR codes (colors, gradients, dot/eye shapes, center logo) and **scan** QR codes from an image. Add one `<script>` tag, call `QrVerse.generate()` or `QrVerse.scan()`, done. No backend, no API key, no build step — and scanning is 100% in-browser (images are never uploaded).
 
 ### 📚 Documentation locations
 
@@ -104,7 +104,7 @@ QRVerse ships a **self-contained, client-side SDK** that anyone can drop into an
 |-------|----------------|
 | **Full CDN SDK docs** (this section in detail) | [`cdn/README.md`](cdn/README.md) |
 | Raw file on GitHub | <https://github.com/v4t3rnomfr/qr-verse/blob/master/cdn/README.md> |
-| Live interactive demo | [`test/cdn-test.html`](test/cdn-test.html) (open it in a browser to test `QrVerse.scan`) |
+| Live interactive demo | [`test/cdn-test.html`](test/cdn-test.html) (open it in a browser to test `QrVerse.generate` and `QrVerse.scan`) |
 
 ### Add the CDN script
 
@@ -116,13 +116,35 @@ Put one script tag in your page (before any code that uses `QrVerse`):
 
 | Build | URL |
 |-------|-----|
-| Minified (recommended, ~130 KB) | `https://cdn.jsdelivr.net/gh/v4t3rnomfr/qr-verse@master/cdn/qrverse.min.js` |
+| Minified (recommended, ~180 KB) | `https://cdn.jsdelivr.net/gh/v4t3rnomfr/qr-verse@master/cdn/qrverse.min.js` |
 | Readable (development) | `https://cdn.jsdelivr.net/gh/v4t3rnomfr/qr-verse@master/cdn/qrverse.js` |
 | Latest release tag | `https://cdn.jsdelivr.net/gh/v4t3rnomfr/qr-verse@latest/cdn/qrverse.min.js` |
 
 > **Pin a version in production** — use `@1.0.0` instead of `@master` so new releases can't break your page.
 
 ### API reference
+
+#### `QrVerse.generate(text, options?) → Promise<GenerateResult>`
+
+Generates a styled QR code as a PNG/SVG data URL — mirrors the app's customization options.
+
+```js
+const qr = await QrVerse.generate('https://example.com', {
+  width: 300,
+  color: '#6366f1',
+  background: '#ffffff',
+  dots: 'rounded',              // 'square' | 'rounded' | 'circle'
+  eye: 'circle',                // 'square' | 'circle' | 'rounded'
+  errorCorrectionLevel: 'H',
+  gradient: { type: 'linear', rotation: 45, color1: '#6366f1', color2: '#a855f7', color3: '#ec4899' },
+  logo: fileInput.files[0],     // File, URL, <img>, or <canvas> (optional center logo)
+  logoSize: 20,                 // % of QR width
+  format: 'png'                 // 'png' | 'svg'
+});
+document.getElementById('qr-img').src = qr.data; // data:image/png;base64,...
+```
+
+Resolves to `{ success, data (data URL), type: 'png'|'svg', width }`.
 
 #### `QrVerse.scan(input, options?) → Promise<Result>`
 
@@ -152,6 +174,28 @@ Rejects with a `QrVerseError` (`.code`) on bad input, or `NOT_FOUND` when no QR 
 
 - `QrVerse.scanImageData(rgba, w, h, options?)` — raw pixels (webcam/video frames)
 - `QrVerse.scanFile(file)` / `QrVerse.scanUrl(url)` — conveniences
+
+### Generate a styled QR (with logo)
+
+```html
+<input type="file" id="logo" accept="image/*">
+<input type="text" id="text" value="https://example.com">
+<img id="out">
+
+<script src="https://cdn.jsdelivr.net/gh/v4t3rnomfr/qr-verse@master/cdn/qrverse.min.js"></script>
+<script>
+  document.getElementById('logo').addEventListener('change', async (e) => {
+    if (!e.target.files[0]) return;
+    const qr = await QrVerse.generate(document.getElementById('text').value, {
+      gradient: { type: 'linear', rotation: 45, color1: '#6366f1', color2: '#a855f7', color3: '#ec4899' },
+      logo: e.target.files[0],
+      logoSize: 18,
+      errorCorrectionLevel: 'H'
+    });
+    document.getElementById('out').src = qr.data;
+  });
+</script>
+```
 
 ### Scan an image (file upload)
 
