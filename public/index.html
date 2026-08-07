@@ -630,12 +630,18 @@
           <div id="fileScanArea" class="file-scan-area"></div>
         </div>
         <div class="scan-result hidden" id="scanResult">
+          <button type="button" class="scan-result-close" id="scanResultClose" aria-label="Dismiss scan result">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 6 6 18M6 6l12 12"/>
+            </svg>
+          </button>
           <div class="result-icon" id="resultIcon"></div>
           <p id="resultText"></p>
           <div class="result-content hidden" id="resultContent">
             <label>Decoded Content:</label>
             <code id="decodedContent"></code>
           </div>
+          <button type="button" class="btn btn-outline btn-full" id="scanResultDone">Done</button>
         </div>
       </div>
     </div>

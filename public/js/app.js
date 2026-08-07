@@ -1610,6 +1610,7 @@ function startScanner() {
   // Wait for any previous camera release before acquiring a new one
   scanStopPromise = scanStopPromise.then(async () => {
     try {
+      $('#scanResult').classList.add('hidden');
       html5QrCode = new Html5Qrcode('qr-reader');
       await html5QrCode.start(
         { facingMode: 'environment' },
@@ -1664,6 +1665,7 @@ function scanUploadedImage(file) {
   stopScanner().then(async () => {
     const fileScanArea = $('#fileScanArea');
     fileScanArea.innerHTML = '';
+    $('#scanResult').classList.add('hidden');
 
     // Show a loading state
     const loadingEl = document.createElement('div');
@@ -2069,7 +2071,6 @@ function setupEventListeners() {
     $('#webcamScan').classList.add('hidden');
     stopScanner();
   });
-
   // Start scan button
   $('#startScanBtn').addEventListener('click', () => {
     if (isScanning) {
@@ -2087,6 +2088,18 @@ function setupEventListeners() {
   $('#scanUpload').addEventListener('change', (e) => {
     scanUploadedImage(e.target.files[0]);
   });
+
+  // Dismiss scan result. "Done" also clears the uploaded image preview
+  // so the upload scan view returns to its empty state.
+  function dismissScanResult(clearPreview) {
+    $('#scanResult').classList.add('hidden');
+    if (clearPreview) {
+      $('#fileScanArea').innerHTML = '';
+      $('#scanUpload').value = '';
+    }
+  }
+  $('#scanResultClose').addEventListener('click', () => dismissScanResult(false));
+  $('#scanResultDone').addEventListener('click', () => dismissScanResult(true));
 
   // Close modals on overlay click
   $$('.modal-overlay').forEach(overlay => {
