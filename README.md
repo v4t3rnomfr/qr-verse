@@ -2,6 +2,22 @@
 
 QRVerse is a premium, modern QR code generator built with Node.js, Express.js, HTML5, CSS3, and Vanilla JavaScript. Create beautiful, fully customizable QR codes with a polished SaaS-grade user experience.
 
+> **Two products in one repo:** the interactive **[QR generator](#usage)** and the **[QR scanning CDN SDK](#cdn-scanner-library)** that anyone can embed in their own project with a single script tag.
+
+## Table of Contents
+
+- [Features](#features)
+- [CDN Scanner Library](#cdn-scanner-library)
+- [Installation](#installation)
+- [Deploy on Vercel](#deploy-on-vercel-recommended)
+- [Usage](#usage)
+- [Project Structure](#project-structure)
+- [Dependencies](#dependencies)
+- [API Endpoints](#api-endpoints)
+- [Browser Support](#browser-support)
+- [Performance](#performance)
+- [License](#license)
+
 ## Features
 
 ### 🎯 11 QR Types
@@ -79,7 +95,15 @@ QRVerse is a premium, modern QR code generator built with Node.js, Express.js, H
 
 ## CDN Scanner Library
 
-QRVerse ships a **self-contained, client-side SDK** that anyone can drop into an existing project via jsDelivr to decode QR codes from an image. No backend or API key needed. Scanning runs entirely in the visitor's browser — images are never uploaded.
+QRVerse ships a **self-contained, client-side SDK** that anyone can drop into an existing project via jsDelivr to decode QR codes from an image. Add one `<script>` tag, pass an image, get the decoded data. No backend, no API key, no build step — and images are never uploaded (scanning is 100% in-browser).
+
+### 📚 Documentation locations
+
+| Guide | Where it lives |
+|-------|----------------|
+| **Full CDN SDK docs** (this section in detail) | [`cdn/README.md`](cdn/README.md) |
+| Raw file on GitHub | <https://github.com/v4t3rnomfr/qr-verse/blob/master/cdn/README.md> |
+| Live interactive demo | [`public/cdn-demo.html`](public/cdn-demo.html) (run `npm start`, open `/cdn-demo.html`) |
 
 ### Add the CDN script
 
@@ -91,10 +115,44 @@ Put one script tag in your page (before any code that uses `QrVerse`):
 
 | Build | URL |
 |-------|-----|
-| Minified (recommended) | `https://cdn.jsdelivr.net/gh/v4t3rnomfr/qr-verse@master/cdn/qrverse.min.js` |
-| Readable | `https://cdn.jsdelivr.net/gh/v4t3rnomfr/qr-verse@master/cdn/qrverse.js` |
+| Minified (recommended, ~130 KB) | `https://cdn.jsdelivr.net/gh/v4t3rnomfr/qr-verse@master/cdn/qrverse.min.js` |
+| Readable (development) | `https://cdn.jsdelivr.net/gh/v4t3rnomfr/qr-verse@master/cdn/qrverse.js` |
+| Latest release tag | `https://cdn.jsdelivr.net/gh/v4t3rnomfr/qr-verse@latest/cdn/qrverse.min.js` |
 
-### Scan an image
+> **Pin a version in production** — use `@1.0.0` instead of `@master` so new releases can't break your page.
+
+### API reference
+
+#### `QrVerse.scan(input, options?) → Promise<Result>`
+
+Accepts a **File/Blob**, an **image URL** / **data URL**, an **`<img>`**, or a **`<canvas>`**.
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `maxDimension` | `800` | Downscale images larger than this (px, longest side) for speed |
+| `inversionAttempts` | `'attemptBoth'` | `'attemptBoth'`, `'dontInvert'`, or `true` |
+
+Resolves to:
+
+```js
+{
+  success: true,
+  data: "https://example.com",   // decoded text
+  binaryData: [ ... ],           // decoded bytes (may be null)
+  version: 3,                    // QR version, or null
+  location: { ... },             // corner points, or null
+  alignmentPattern: { ... }      // or null
+}
+```
+
+Rejects with a `QrVerseError` (`.code`) on bad input, or `NOT_FOUND` when no QR is detected.
+
+#### Other methods
+
+- `QrVerse.scanImageData(rgba, w, h, options?)` — raw pixels (webcam/video frames)
+- `QrVerse.scanFile(file)` / `QrVerse.scanUrl(url)` — conveniences
+
+### Scan an image (file upload)
 
 Give the user a file picker and call `QrVerse.scan()`:
 
@@ -114,9 +172,9 @@ Give the user a file picker and call `QrVerse.scan()`:
 </script>
 ```
 
-`QrVerse.scan()` accepts a **File/Blob**, an **image URL** or **data URL**, an **`<img>`**, or a **`<canvas>`**. It resolves to `{ success, data, binaryData, version, location, alignmentPattern }`.
+### Scan an image shown in an `<img>` tag
 
-Scanning an `<img>` that shows a file upload also works — pass the element right after setting `src`; it waits for the image to load:
+Pass the `<img>` element right after setting `src` (e.g. `URL.createObjectURL(file)`); the scanner waits for the image to load:
 
 ```html
 <img id="preview">
@@ -144,13 +202,16 @@ const { data, width, height } = ctx.getImageData(0, 0, canvas.width, canvas.heig
 const res = await QrVerse.scanImageData(data, width, height);
 ```
 
-### Conveniences
+> A complete, ready-to-paste HTML page is in [`cdn/README.md`](cdn/README.md#how-to-use).
 
-- `QrVerse.scanFile(file)` / `QrVerse.scanUrl(url)`
+### Building the CDN bundle
 
-Full docs, CDN URLs, and a live example: see [`cdn/README.md`](cdn/README.md) (a full copy-paste HTML example) and [`public/cdn-demo.html`](public/cdn-demo.html).
+```bash
+npm run build:cdn     # regenerates cdn/qrverse.js + cdn/qrverse.min.js
+npm run test:cdn      # headless functional smoke test
+```
 
-Rebuild after changing the SDK: `npm run build:cdn` (commit the files in `cdn/`). Smoke test: `npm run test:cdn`.
+Commit the built files in `cdn/` — jsDelivr serves them straight from GitHub.
 
 ## Installation
 
