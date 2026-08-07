@@ -810,6 +810,9 @@ body::before {
   color-scheme: dark;
   -webkit-appearance: auto;
   appearance: auto;
+  cursor: pointer;
+  position: relative;
+  padding-right: 40px;
 }
 
 .form-group input[type="datetime-local"]::-webkit-calendar-picker-indicator,
@@ -818,6 +821,12 @@ body::before {
   cursor: pointer;
   opacity: 0.65;
   transition: opacity var(--transition-fast);
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .form-group input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover,
