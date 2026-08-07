@@ -785,6 +785,9 @@ body::before {
 .form-group input[type="email"],
 .form-group input[type="tel"],
 .form-group input[type="number"],
+.form-group input[type="datetime-local"],
+.form-group input[type="date"],
+.form-group input[type="time"],
 .form-group textarea,
 .form-group select {
   width: 100%;
@@ -798,6 +801,27 @@ body::before {
   transition: all var(--transition-fast);
   -webkit-appearance: none;
   appearance: none;
+}
+
+/* Native date/time pickers follow the dark theme */
+.form-group input[type="datetime-local"],
+.form-group input[type="date"],
+.form-group input[type="time"] {
+  color-scheme: dark;
+}
+
+.form-group input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+.form-group input[type="date"]::-webkit-calendar-picker-indicator,
+.form-group input[type="time"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.65;
+  transition: opacity var(--transition-fast);
+}
+
+.form-group input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover,
+.form-group input[type="date"]::-webkit-calendar-picker-indicator:hover,
+.form-group input[type="time"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
 }
 
 .form-group input:focus,
