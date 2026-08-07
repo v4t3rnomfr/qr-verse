@@ -291,6 +291,29 @@ Anyone can fork this repo and deploy their own instance with their own storage:
 - `BLOB_READ_WRITE_TOKEN` is only used server-side (routes/qr.js) to *save* files. Visitors never see it.
 - This keeps the project open source (whole repo is public on GitHub) **and** safe from abuse.
 
+### How deployment works (GitHub → Vercel)
+
+Confused about how the app runs if the token is "hidden"? Here's the full picture:
+
+1. **GitHub stores only code.** The repo references the env var *name* (`process.env.BLOB_READ_WRITE_TOKEN` / the `@vercel/blob` `put()` call in routes/qr.js) — never its value.
+2. **Vercel stores the secret.** When you create a Blob Store, the token is saved in your project's **Settings → Environment Variables** on Vercel's servers — not in GitHub.
+3. **Every push auto-deploys.** Vercel watches the connected GitHub repo. On each push to `master` it clones your code, builds it, and injects the secret env vars into the running serverless function at runtime.
+4. **The running app uses the token in memory** — it's never printed, logged, or served to visitors, and it never appears in the deployed output.
+
+```
+Your commit + push
+      │
+      ▼
+GitHub repo (code only, no secrets)
+      │  Vercel watches the repo
+      ▼
+Vercel build → injects secrets from dashboard → Production deployment
+```
+
+**Local dev** mimics this: `npm start` reads `BLOB_READ_WRITE_TOKEN` from your local `.env.local` (gitignored). Delete that file and the app still runs — uploads just fall back to local disk.
+
+**If someone forks the repo:** they get your *code*, not your token. Their fork has no `BLOB_READ_WRITE_TOKEN`, so their deploy runs fine but Image → Link uploads fall back to disk (or fail gracefully). They'd set up their own Blob Store to enable uploads — exactly what you did. The only thing visible to them in generated URLs is the public store name, which is not a credential.
+
 ### Project on Vercel
 
 - The Express app (with SPA fallback + API) is served through a single serverless function via `api/index.js`.
