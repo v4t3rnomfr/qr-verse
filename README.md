@@ -31,6 +31,7 @@ QRVerse is a premium, modern QR code generator built with Node.js, Express.js, H
 - **Google Maps** - Location links
 - **Contact (vCard)** - Complete contact cards
 - **Event** - Calendar events (ICS format)
+- **Image Link** - Upload an image, get a QR that links to it (public URL, anyone can view)
 - **Custom** - Raw data encoding
 
 ### 🎨 Full Customization
@@ -262,19 +263,33 @@ vercel        # Preview deployment
 vercel --prod # Production deployment
 ```
 
-### Environment Variables (for Image → Link UL)
+### Environment Variables (for Image → Link QR)
 
-The uploads route uses local disk in development. In production on Vercel, connect the **Vercel Blob Store**:
+The **Image → Link** QR type uploads an image and generates a QR that points to the stored file. Public access is free — anyone with the resulting URL can view the image. Uploads need storage, configured like this:
 
-1. In your Vercel project → **Storage** → **Create Blob Store**.
-2. Copy the read/write token.
-3. In **Settings → Environment Variables** add:
+| Name | Required | Purpose |
+|------|----------|---------|
+| `BLOB_READ_WRITE_TOKEN` | on Vercel | Vercel Blob Store credential for saving uploads |
 
-   | Name | Value |
-   |------|-------|
-   | `BLOB_READ_WRITE_TOKEN` | (your token) |
+> ⚠️ **Keep `BLOB_READ_WRITE_TOKEN` a secret.** It is a *write* credential, not a "public key." Anyone with it can upload, overwrite, or delete files in your store and consume your storage quota. **Never commit it to the repo.** It lives only in your Vercel project env vars (or a local `.env.local`), which is why the file is in `.gitignore`.
 
-4. Redeploy. The upload endpoint will automatically store images in Blob instead of local disk.
+#### Local development (no Vercel needed)
+
+The upload route falls back to local disk automatically — uploaded images are saved to `public/uploads/`. Just run `npm start`.
+
+#### Production on Vercel — set up your own Blob Store
+
+Anyone can fork this repo and deploy their own instance with their own storage:
+
+1. In your Vercel project → **Storage** → **Create Blob Store**. Pick **public** access so image URLs are viewable by anyone.
+2. Vercel automatically sets `BLOB_READ_WRITE_TOKEN` for the project (also runnable via `vercel blob create-store <name> --access public`).
+3. Redeploy. Uploads now store in Blob and return a public URL.
+
+#### Why the token stays out of the repo, but images stay public
+
+- The Blob store is created with `access: 'public'`, so every uploaded image URL works for anyone — no auth, no key.
+- `BLOB_READ_WRITE_TOKEN` is only used server-side (routes/qr.js) to *save* files. Visitors never see it.
+- This keeps the project open source (whole repo is public on GitHub) **and** safe from abuse.
 
 ### Project on Vercel
 
