@@ -752,8 +752,12 @@ function getQRConfig() {
   const eyeColor = $('#eyeColor').value;
   const ecLevel = $('#ecLevel').value;
   const gradientEnabled = $('#gradientEnabled').checked;
+  const gradientType = $('#gradientType') ? $('#gradientType').value : 'linear';
+  const gradientDirection = $('#gradientDirection') ? parseInt($('#gradientDirection').value) || 45 : 45;
   const gradientColor1 = $('#gradientColor1').value;
   const gradientColor2 = $('#gradientColor2').value;
+  const gradientColor3 = $('#gradientColor3') ? $('#gradientColor3').value : gradientColor2;
+  const gradientApplyToEyes = $('#gradientApplyToEyes') ? $('#gradientApplyToEyes').checked : true;
   const transparentBg = $('#transparentBg').checked;
 
   // Map UI-friendly values to qr-code-styling library values.
@@ -808,16 +812,22 @@ function getQRConfig() {
   };
 
   if (gradientEnabled) {
-    config.dotsOptions.gradient = {
-      type: 'linear',
-      rotation: Math.PI / 4,
+    const gradient = {
+      type: gradientType,
       colorStops: [
         { offset: 0, color: gradientColor1 },
-        { offset: 1, color: gradientColor2 }
+        { offset: 0.5, color: gradientColor2 },
+        { offset: 1, color: gradientColor3 }
       ]
     };
-    config.cornersSquareOptions.gradient = config.dotsOptions.gradient;
-    config.cornersDotOptions.gradient = config.dotsOptions.gradient;
+    if (gradientType === 'linear') {
+      gradient.rotation = gradientDirection * Math.PI / 180;
+    }
+    config.dotsOptions.gradient = gradient;
+    if (gradientApplyToEyes) {
+      config.cornersSquareOptions.gradient = gradient;
+      config.cornersDotOptions.gradient = gradient;
+    }
   }
 
   return config;
@@ -2041,6 +2051,7 @@ function setupCustomizationEvents() {
   const inputs = [
     'qrSize', 'qrMargin', 'fgColor', 'bgColor', 'dotStyle',
     'eyeStyle', 'eyeColor', 'ecLevel', 'gradientColor1', 'gradientColor2',
+    'gradientColor3', 'gradientType', 'gradientDirection', 'gradientApplyToEyes',
     'logoSize', 'gradientEnabled', 'transparentBg'
   ];
 
@@ -2053,10 +2064,13 @@ function setupCustomizationEvents() {
         if (id === 'qrMargin') $('#qrMarginValue').textContent = el.value;
         if (id === 'logoSize') $('#logoSizeValue').textContent = el.value + '%';
 
-        // Toggle gradient options
+        // Toggle gradient panel + direction visibility
         if (id === 'gradientEnabled') {
-          $('#gradientOptions').classList.toggle('visible', el.checked);
-          $('#gradientOptions2').classList.toggle('visible', el.checked);
+          $('#gradientPanel').classList.toggle('visible', el.checked);
+        }
+        if (id === 'gradientType') {
+          const isRadial = el.value === 'radial';
+          $('#gradientDirectionGroup').classList.toggle('hidden', isRadial);
         }
 
         if (state.generated) updateQRCode();
@@ -2065,6 +2079,10 @@ function setupCustomizationEvents() {
         // Warn if the new color makes background, foreground, or eye too similar.
         if (id === 'fgColor' || id === 'bgColor' || id === 'eyeColor') {
           checkSimilarColors();
+        }
+        if (id === 'gradientType') {
+          const isRadial = el.value === 'radial';
+          $('#gradientDirectionGroup').classList.toggle('hidden', isRadial);
         }
         if (state.generated) updateQRCode();
       });

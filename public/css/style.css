@@ -969,19 +969,24 @@ body::before {
   outline-offset: 2px;
 }
 
-/* Gradient Options */
-.gradient-options {
-  opacity: 0;
-  max-height: 0;
-  overflow: hidden;
-  transition: all var(--transition-normal);
-  margin: 0;
+/* Gradient Panel */
+.gradient-panel {
+  display: none;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--bg-tertiary);
+  padding: 16px;
+  margin-bottom: 4px;
+  animation: fadeIn 0.25s ease;
 }
 
-.gradient-options.visible {
-  opacity: 1;
-  max-height: 100px;
-  margin-bottom: 20px;
+.gradient-panel.visible {
+  display: block;
+  grid-column: 1 / -1;
+}
+
+.gradient-panel .form-group {
+  margin-bottom: 0;
 }
 
 /* Logo Controls */

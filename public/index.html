@@ -404,14 +404,48 @@
                 </label>
               </div>
 
-              <div class="form-group gradient-options hidden" id="gradientOptions">
-                <label for="gradientColor1">Gradient Start</label>
-                <input type="color" id="gradientColor1" value="#6366f1">
-              </div>
+              <div id="gradientPanel" class="gradient-panel">
+                <div class="form-group">
+                  <label for="gradientType">Gradient Type</label>
+                  <select id="gradientType">
+                    <option value="linear">Linear</option>
+                    <option value="radial">Radial</option>
+                  </select>
+                </div>
 
-              <div class="form-group gradient-options hidden" id="gradientOptions2">
-                <label for="gradientColor2">Gradient End</label>
-                <input type="color" id="gradientColor2" value="#ec4899">
+                <div class="form-group gradient-direction hidden" id="gradientDirectionGroup">
+                  <label for="gradientDirection">Direction</label>
+                  <select id="gradientDirection">
+                    <option value="0">→ To Right</option>
+                    <option value="45" selected>↘ Diagonal</option>
+                    <option value="90">↓ To Bottom</option>
+                    <option value="135">↙ Reverse Diagonal</option>
+                    <option value="180">← To Left</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="gradientColor1">Gradient Start</label>
+                  <input type="color" id="gradientColor1" value="#6366f1">
+                </div>
+
+                <div class="form-group">
+                  <label for="gradientColor2">Gradient Middle</label>
+                  <input type="color" id="gradientColor2" value="#a855f7">
+                </div>
+
+                <div class="form-group">
+                  <label for="gradientColor3">Gradient End</label>
+                  <input type="color" id="gradientColor3" value="#ec4899">
+                </div>
+
+                <div class="form-group form-group-full">
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="gradientApplyToEyes">
+                    <span class="checkbox-custom"></span>
+                    Apply gradient to finder eyes
+                  </label>
+                </div>
               </div>
 
               <div class="form-group form-group-full">
