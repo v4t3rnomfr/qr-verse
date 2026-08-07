@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QrVerse CDN — Test</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #0b1020; color: #e8ecf7; padding: 40px 16px; }
+    .card { max-width: 520px; margin: 0 auto 24px; background: #151b30; border: 1px solid #262f4d; border-radius: 14px; padding: 24px; }
+    label { display: block; font-weight: 600; margin-bottom: 8px; color: #aeb7d6; }
+    input[type=file] { width: 100%; }
+    button { margin-top: 8px; padding: 8px 14px; border: 0; border-radius: 8px; background: linear-gradient(135deg,#6d5cff,#4f9cff); color: #fff; font-weight: 700; cursor: pointer; }
+    button:disabled { opacity: .5; }
+    pre { background: #0e1327; padding: 12px; border-radius: 8px; white-space: pre-wrap; word-break: break-all; font-size: .85rem; }
+    .code { font-family: ui-monospace, monospace; color: #8fb4ff; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2 style="margin:0 0 6px">CDN loader check</h2>
+    <pre id="api">loading…</pre>
+  </div>
+
+  <div class="card">
+    <label for="file">Upload an image containing a QR code</label>
+    <input type="file" id="file" accept="image/*">
+    <button id="scan">QrVerse.scan(file)</button>
+    <pre id="result">—</pre>
+  </div>
+
+  <div class="card">
+    <label>Scan by URL / data URL</label>
+    <input id="dataUrl" type="text" placeholder="data:image/png;base64,...." style="width:100%;padding:8px;box-sizing:border-box">
+    <button id="scanUrl" style="margin-top:8px">QrVerse.scanUrl(value)</button>
+    <pre id="scanUrlResult">—</pre>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/gh/v4t3rnomfr/qr-verse@master/cdn/qrverse.min.js"></script>
+  <script>
+    (function () {
+      var api = document.getElementById('api');
+      var cheats = {
+        hasQrVerse: typeof QrVerse !== 'undefined',
+        hasDecoder: typeof QrVerse !== 'undefined' && typeof QrVerseDecoder === 'function',
+        version: typeof QrVerse !== 'undefined' ? QrVerse.version : null,
+      };
+      api.textContent = JSON.stringify(cheats, null, 2);
+      if (!cheats.hasQrVerse) {
+        api.textContent += '\n\nERROR: script failed to load or expose QrVerse.';
+      }
+    })();
+
+    document.getElementById('scan').addEventListener('click', async function () {
+      var file = document.getElementById('file').files && document.getElementById('file').files[0];
+      var out = document.getElementById('result');
+      if (!file) { output('result', 'No file selected.', true); return; }
+      output('result', 'Scanning…');
+      try {
+        var res = await QrVerse.scan(file);
+        output('result', 'OK data: "' + res.data + '"');
+      } catch (e) {
+        output('result', 'ERR: ' + (e && e.message) + ' (code=' + (e && e.code) + ')', true);
+      }
+    });
+
+    document.getElementById('scanUrl').addEventListener('click', async function () {
+      var v = document.getElementById('dataUrl').value.trim();
+      if (!v) { output('scanUrlResult', 'Paste a data URL first.', true); return; }
+      output('scanUrlResult', 'Scanning…');
+      try {
+        var res = await QrVerse.scanUrl(v);
+        output('scanUrlResult', 'OK data: "' + res.data + '"');
+      } catch (e) {
+        output('scanUrlResult', 'ERR: ' + (e && e.message) + ' (code=' + (e && e.code) + ')', true);
+      }
+    });
+
+    function output(id, msg, isError) {
+      var el = document.getElementById(id);
+      el.textContent = msg;
+      el.style.color = isError ? '#ff9c9c' : '';
+    }
+  </script>
+</body>
+</html>
