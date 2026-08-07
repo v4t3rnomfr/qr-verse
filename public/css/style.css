@@ -1335,6 +1335,34 @@ body::before {
   background: #000;
 }
 
+.qr-reader-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+  padding: 20px;
+  color: var(--text-muted);
+  background: var(--bg-tertiary);
+}
+
+.qr-reader-placeholder svg {
+  width: 48px;
+  height: 48px;
+  opacity: 0.6;
+}
+
+.qr-reader-placeholder p {
+  font-size: 14px;
+}
+
+.qr-reader-placeholder .upload-hint {
+  margin-top: 0;
+}
+
 /* IMPORTANT: do NOT force height/overflow on .qr-reader. html5-qrcode
    positions its scan overlay relative to the VIDEO element's rendered
    size. Forcing a different container size makes the overlay stretch
@@ -1342,6 +1370,8 @@ body::before {
 .qr-reader {
   width: 100%;
   background: #000;
+  position: relative;
+  z-index: 1;
 }
 
 .qr-reader video {

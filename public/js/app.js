@@ -1555,6 +1555,8 @@ function openScanModal() {
   $('#scanResult').classList.add('hidden');
   $('#scanUpload').value = '';
   $('#fileScanArea').innerHTML = '';
+  const placeholder = $('#qrReaderPlaceholder');
+  if (placeholder) placeholder.classList.remove('hidden');
 }
 
 function closeScanModal() {
@@ -1583,6 +1585,11 @@ function stopScanner() {
       }
     }
     isScanning = false;
+
+    // Restore the placeholder so the viewfinder shows its default state
+    // instead of a blank black box after the camera is turned off.
+    const placeholder = $('#qrReaderPlaceholder');
+    if (placeholder) placeholder.classList.remove('hidden');
 
     const startBtn = $('#startScanBtn');
     if (startBtn) {
@@ -1687,6 +1694,8 @@ function startScanner() {
       };
       await startCamera(html5QrCode, currentFacingMode, config);
       isScanning = true;
+      const placeholder = $('#qrReaderPlaceholder');
+      if (placeholder) placeholder.classList.add('hidden');
       const startBtn = $('#startScanBtn');
       startBtn.innerHTML = `
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
