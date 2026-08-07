@@ -1334,12 +1334,13 @@ body::before {
   background: #000;
 }
 
+/* IMPORTANT: do NOT force height/overflow on .qr-reader. html5-qrcode
+   positions its scan overlay relative to the VIDEO element's rendered
+   size. Forcing a different container size makes the overlay stretch
+   and the pixel-capture region drift off the stream — scan fails. */
 .qr-reader {
   width: 100%;
-  min-height: 240px;
-  max-height: 320px;
-  overflow: hidden;
-  background: var(--bg-tertiary);
+  background: #000;
 }
 
 .qr-reader video {
@@ -2234,16 +2235,6 @@ body::before {
     max-width: 100%;
     max-height: 100vh;
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  }
-
-  .qr-reader {
-    min-height: 0;
-    max-height: none;
-    aspect-ratio: 1 / 0.8;
-  }
-
-  .qr-reader video {
-    max-height: none;
   }
 }
 

@@ -1675,7 +1675,16 @@ function startScanner() {
     try {
       $('#scanResult').classList.add('hidden');
       html5QrCode = new Html5Qrcode('qr-reader');
-      const config = { fps: 10, qrbox: { width: 200, height: 200 } };
+      // Responsive scan box: scale with the actual video element so the
+      // capture region never exceeds the stream (a too-large fixed qrbox
+      // makes the library skip its shaded overlay and misaligns decoding).
+      const config = {
+        fps: 10,
+        qrbox: (vw, vh) => {
+          const size = Math.max(120, Math.floor(Math.min(vw, vh) * 0.7));
+          return { width: size, height: size };
+        }
+      };
       await startCamera(html5QrCode, currentFacingMode, config);
       isScanning = true;
       const startBtn = $('#startScanBtn');
