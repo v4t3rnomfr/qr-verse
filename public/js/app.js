@@ -338,7 +338,7 @@ const formDefinitions = {
     fields: () => `
       <div class="form-group">
         <label for="imgLinkUpload">Upload Image *</label>
-        <div class="upload-zone" id="imgLinkZone">
+        <div class="upload-zone upload-zone-sm" id="imgLinkZone">
           <input type="file" id="imgLinkUpload" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="3" y="3" width="18" height="18" rx="2"/>
@@ -349,8 +349,18 @@ const formDefinitions = {
           <span class="upload-hint">PNG, JPG, WEBP — The image is uploaded and a QR link to it is generated.</span>
         </div>
         <div id="imgLinkPreview" class="img-link-preview hidden">
-          <img id="imgLinkThumb" alt="Uploaded image preview">
-          <button type="button" class="btn btn-outline btn-sm" id="imgLinkRemove">Remove Image</button>
+          <div class="img-link-preview-img-box">
+            <img id="imgLinkThumb" alt="Uploaded image preview">
+          </div>
+          <div class="img-link-preview-meta">
+            <span class="img-link-preview-label">Image uploaded</span>
+            <span class="img-link-preview-name" id="imgLinkFileName"></span>
+          </div>
+          <button type="button" class="img-link-preview-remove" id="imgLinkRemove" aria-label="Remove uploaded image">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 6 6 18M6 6l12 12"/>
+            </svg>
+          </button>
         </div>
         <small id="imgLinkStatus" class="field-hint"></small>
         <span class="upload-hint" id="imgLinkRetention">⚠️ Images are compressed and deleted automatically after 14 days — QR links to them stop working then.</span>
@@ -654,6 +664,8 @@ function setupImageLinkForm() {
     const reader = new FileReader();
     reader.onload = async (ev) => {
       $('#imgLinkThumb').src = ev.target.result;
+      const nameEl = $('#imgLinkFileName');
+      if (nameEl) nameEl.textContent = file.name || 'uploaded-image.png';
       previewEl.classList.remove('hidden');
       statusEl.textContent = 'Uploading image...';
 

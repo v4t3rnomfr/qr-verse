@@ -1416,6 +1416,27 @@ body::before {
   color: var(--text-muted);
 }
 
+/* Compact dropzone used inside form fields (e.g. Image Link) */
+.upload-zone.upload-zone-sm {
+  min-height: 150px;
+  gap: 10px;
+  padding: 20px;
+}
+
+.upload-zone.upload-zone-sm svg {
+  width: 36px;
+  height: 36px;
+}
+
+.upload-zone.upload-zone-sm p {
+  font-size: 13px;
+}
+
+.upload-zone.upload-zone-sm .upload-hint {
+  max-width: 90%;
+  text-align: center;
+}
+
 .upload-zone:hover {
   border-color: var(--primary);
   background: rgba(99, 102, 241, 0.05);
@@ -1436,6 +1457,90 @@ body::before {
   font-size: 12px;
   color: var(--text-muted);
   margin-top: 4px;
+}
+
+/* Image Link upload preview — compact card (thumb + filename + remove) */
+.img-link-preview {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--bg-tertiary);
+}
+
+.img-link-preview-img-box {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-color);
+}
+
+.img-link-preview-img-box img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.img-link-preview-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.img-link-preview-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary-light);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.img-link-preview-name {
+  font-size: 13px;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.img-link-preview-remove {
+  flex-shrink: 0;
+  margin-left: auto;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.img-link-preview-remove:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--error);
+}
+
+.img-link-preview-remove svg {
+  width: 16px;
+  height: 16px;
 }
 
 .file-scan-area {
