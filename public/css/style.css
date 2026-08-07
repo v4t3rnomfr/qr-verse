@@ -1329,6 +1329,7 @@ body::before {
 .qr-reader-wrap {
   position: relative;
   width: 100%;
+  min-height: 260px;
   border-radius: var(--radius-md);
   overflow: hidden;
   background: #000;

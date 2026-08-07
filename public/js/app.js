@@ -2153,12 +2153,20 @@ function setupEventListeners() {
   // Scan modal close
   $('#closeScanModal').addEventListener('click', closeScanModal);
 
-  // Scan tabs
+  // Scan tabs — switching modes clears the previous mode's upload/result
+  // state so nothing stale leaks between Webcam and Upload Image.
+  function resetUploadAndResult() {
+    $('#scanResult').classList.add('hidden');
+    $('#fileScanArea').innerHTML = '';
+    $('#scanUpload').value = '';
+  }
+
   $('#webcamTab').addEventListener('click', () => {
     $('#webcamTab').classList.add('active');
     $('#uploadTab').classList.remove('active');
     $('#webcamScan').classList.remove('hidden');
     $('#uploadScan').classList.add('hidden');
+    resetUploadAndResult();
     stopScanner();
   });
 
@@ -2167,6 +2175,7 @@ function setupEventListeners() {
     $('#webcamTab').classList.remove('active');
     $('#uploadScan').classList.remove('hidden');
     $('#webcamScan').classList.add('hidden');
+    resetUploadAndResult();
     stopScanner();
   });
   // Start scan button
@@ -2190,17 +2199,15 @@ function setupEventListeners() {
     scanUploadedImage(e.target.files[0]);
   });
 
-  // Dismiss scan result. "Done" also clears the uploaded image preview
-  // so the upload scan view returns to its empty state.
-  function dismissScanResult(clearPreview) {
+  // Dismiss scan result. Both the result's 'x' and the uploaded image's
+  // 'x' clear the entire upload view (preview + result) so nothing lingers.
+  function dismissScanResult() {
     $('#scanResult').classList.add('hidden');
-    if (clearPreview) {
-      $('#fileScanArea').innerHTML = '';
-      $('#scanUpload').value = '';
-    }
+    $('#fileScanArea').innerHTML = '';
+    $('#scanUpload').value = '';
   }
-  $('#scanResultClose').addEventListener('click', () => dismissScanResult(false));
-  $('#scanResultDone').addEventListener('click', () => dismissScanResult(true));
+  $('#scanResultClose').addEventListener('click', dismissScanResult);
+  $('#scanResultDone').addEventListener('click', dismissScanResult);
 
   // Close modals on overlay click
   $$('.modal-overlay').forEach(overlay => {
