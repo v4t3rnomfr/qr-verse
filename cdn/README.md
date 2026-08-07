@@ -210,7 +210,7 @@ Data URLs work the same way — set `img.src` to a `data:image/...` string and s
 
 ## Local demo
 
-Run `npm start` and open `http://localhost:3000/cdn-demo.html`.
+Open `test/cdn-test.html` directly in a browser (it loads the live CDN build), or run `npm start` and visit the app at `http://localhost:3000`.
 
 ## Building
 

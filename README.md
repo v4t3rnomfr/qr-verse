@@ -103,7 +103,7 @@ QRVerse ships a **self-contained, client-side SDK** that anyone can drop into an
 |-------|----------------|
 | **Full CDN SDK docs** (this section in detail) | [`cdn/README.md`](cdn/README.md) |
 | Raw file on GitHub | <https://github.com/v4t3rnomfr/qr-verse/blob/master/cdn/README.md> |
-| Live interactive demo | [`public/cdn-demo.html`](public/cdn-demo.html) (run `npm start`, open `/cdn-demo.html`) |
+| Live interactive demo | [`test/cdn-test.html`](test/cdn-test.html) (open it in a browser to test `QrVerse.scan`) |
 
 ### Add the CDN script
 
