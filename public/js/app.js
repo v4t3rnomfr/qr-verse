@@ -558,6 +558,22 @@ function switchType(type) {
     el.addEventListener('change', handleInputChange);
   });
 
+  // Clicking a date/time field anywhere opens its native calendar+time
+  // picker (not just the small indicator icon).
+  formBody.querySelectorAll('input[type="datetime-local"], input[type="date"], input[type="time"]').forEach(el => {
+    el.addEventListener('click', () => {
+      try {
+        if (typeof el.showPicker === 'function') {
+          el.showPicker();
+        } else {
+          el.focus();
+        }
+      } catch (e) {
+        el.focus();
+      }
+    });
+  });
+
   // Special init for Image Link form
   if (type === 'imagelink') {
     imageLinkUploadHandlerBound = false;

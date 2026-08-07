@@ -808,6 +808,8 @@ body::before {
 .form-group input[type="date"],
 .form-group input[type="time"] {
   color-scheme: dark;
+  -webkit-appearance: auto;
+  appearance: auto;
 }
 
 .form-group input[type="datetime-local"]::-webkit-calendar-picker-indicator,
