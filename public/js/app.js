@@ -2099,6 +2099,16 @@ function setupCustomizationEvents() {
   });
 
   $('#removeLogoBtn').addEventListener('click', removeLogo);
+
+  // Sync gradient UI with current state on load (panel visible if enabled,
+  // direction visible/hidden matching the selected type).
+  function syncGradientUI() {
+    const enabled = $('#gradientEnabled').checked;
+    $('#gradientPanel').classList.toggle('visible', enabled);
+    const type = $('#gradientType').value;
+    $('#gradientDirectionGroup').classList.toggle('hidden', type === 'radial');
+  }
+  syncGradientUI();
 }
 
 // ===== Event Listeners =====
