@@ -1326,13 +1326,56 @@ body::before {
   gap: 16px;
 }
 
+.qr-reader-wrap {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: #000;
+}
+
 .qr-reader {
   width: 100%;
-  max-height: 300px;
+  min-height: 240px;
+  max-height: 320px;
   overflow: hidden;
-  border-radius: var(--radius-md);
   background: var(--bg-tertiary);
-  min-height: 200px;
+}
+
+.qr-reader video {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 320px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Scan target frame */
+.scan-frame {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.scan-frame .corner {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(99, 102, 241, 0.9);
+}
+
+.scan-frame .corner.tl { top: 20px; left: 20px; border-right: none; border-bottom: none; border-top-left-radius: 12px; }
+.scan-frame .corner.tr { top: 20px; right: 20px; border-left: none; border-bottom: none; border-top-right-radius: 12px; }
+.scan-frame .corner.bl { bottom: 20px; left: 20px; border-right: none; border-top: none; border-bottom-left-radius: 12px; }
+.scan-frame .corner.br { bottom: 20px; right: 20px; border-left: none; border-top: none; border-bottom-right-radius: 12px; }
+
+.btn-row {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-row .btn {
+  flex: 1;
 }
 
 .upload-zone {
@@ -1392,6 +1435,41 @@ body::before {
   border-radius: var(--radius-md);
   border: 2px solid var(--border-color);
   box-shadow: var(--shadow-sm);
+}
+
+.scan-preview-wrap {
+  position: relative;
+  display: inline-block;
+  border-radius: var(--radius-md);
+}
+
+.scan-preview-remove {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-fast);
+}
+
+.scan-preview-remove:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--error);
+  transform: rotate(90deg);
+}
+
+.scan-preview-remove svg {
+  width: 14px;
+  height: 14px;
 }
 
 .scan-progress {
@@ -2154,6 +2232,33 @@ body::before {
   .nav-item {
     padding: 14px 16px;
   }
+
+  /* Scan modal — full-width camera on phones */
+  .modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .modal {
+    max-width: 100%;
+    max-height: 100vh;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  .qr-reader {
+    min-height: 0;
+    max-height: none;
+    aspect-ratio: 1 / 0.8;
+  }
+
+  .qr-reader video {
+    max-height: none;
+  }
+
+  .scan-frame .corner {
+    width: 28px;
+    height: 28px;
+  }
 }
 
 /* Small Mobile */
@@ -2199,6 +2304,15 @@ body::before {
     width: 30px;
     height: 30px;
     border-width: 5px;
+  }
+
+  .btn-row {
+    flex-direction: column;
+  }
+
+  .btn-row .btn {
+    flex: none;
+    width: 100%;
   }
 
   .action-row {

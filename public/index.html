@@ -610,13 +610,26 @@
           <button class="scan-tab" id="uploadTab">Upload Image</button>
         </div>
         <div class="scan-content" id="webcamScan">
-          <div id="qr-reader" class="qr-reader"></div>
-          <button class="btn btn-primary btn-full" id="startScanBtn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/>
-            </svg>
-            Start Camera
-          </button>
+          <div class="qr-reader-wrap">
+            <div id="qr-reader" class="qr-reader"></div>
+            <div class="scan-frame" aria-hidden="true">
+              <i class="corner tl"></i><i class="corner tr"></i>
+              <i class="corner bl"></i><i class="corner br"></i>
+            </div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" id="startScanBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/>
+              </svg>
+              Start Camera
+            </button>
+            <button class="btn btn-outline hidden" id="flipCameraBtn" aria-label="Switch camera">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 0 1 9-9"/>
+              </svg>
+            </button>
+          </div>
         </div>
         <div class="scan-content hidden" id="uploadScan">
           <div class="upload-zone" id="scanUploadZone">

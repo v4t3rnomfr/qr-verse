@@ -1546,6 +1546,7 @@ function deleteHistoryItem(id) {
 // ===== Scan Verification =====
 let html5QrCode = null;
 let isScanning = false;
+let currentFacingMode = 'environment';
 
 let scanStopPromise = Promise.resolve();
 
@@ -1594,6 +1595,11 @@ function stopScanner() {
       startBtn.classList.remove('btn-outline');
       startBtn.classList.add('btn-primary');
     }
+    const flipBtn = $('#flipCameraBtn');
+    if (flipBtn) {
+      flipBtn.classList.add('hidden');
+      flipBtn.disabled = false;
+    }
   });
   return scanStopPromise;
 }
@@ -1613,7 +1619,7 @@ function startScanner() {
       $('#scanResult').classList.add('hidden');
       html5QrCode = new Html5Qrcode('qr-reader');
       await html5QrCode.start(
-        { facingMode: 'environment' },
+        { facingMode: currentFacingMode },
         { fps: 10, qrbox: { width: 200, height: 200 } },
         (decodedText) => {
           showScanResult(true, decodedText);
@@ -1631,6 +1637,8 @@ function startScanner() {
       `;
       startBtn.classList.remove('btn-primary');
       startBtn.classList.add('btn-outline');
+      const flipBtn = $('#flipCameraBtn');
+      if (flipBtn) flipBtn.classList.remove('hidden');
     } catch (err) {
       console.error('Scanner error:', err);
       showToast('Could not access camera. Check permissions and try again.', 'error');
@@ -1638,6 +1646,19 @@ function startScanner() {
     }
   });
   return scanStopPromise;
+}
+
+/**
+ * Switches between the rear (environment) and front (user) camera
+ * while a scan is running.
+ */
+function flipCamera() {
+  const flipBtn = $('#flipCameraBtn');
+  if (flipBtn) flipBtn.disabled = true;
+  currentFacingMode = currentFacingMode === 'environment' ? 'user' : 'environment';
+  stopScanner().then(() => startScanner()).finally(() => {
+    if (flipBtn) flipBtn.disabled = false;
+  });
 }
 
 /**
@@ -1684,7 +1705,25 @@ function scanUploadedImage(file) {
       thumb.className = 'scan-preview-img';
       thumb.alt = 'Uploaded QR image preview';
       fileScanArea.innerHTML = '';
-      fileScanArea.appendChild(thumb);
+      const previewWrap = document.createElement('div');
+      previewWrap.className = 'scan-preview-wrap';
+      previewWrap.appendChild(thumb);
+      const removeBtn = document.createElement('button');
+      removeBtn.type = 'button';
+      removeBtn.className = 'scan-preview-remove';
+      removeBtn.setAttribute('aria-label', 'Remove uploaded image');
+      removeBtn.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6 6 18M6 6l12 12"/>
+        </svg>
+      `;
+      removeBtn.addEventListener('click', () => {
+        fileScanArea.innerHTML = '';
+        $('#scanUpload').value = '';
+        $('#scanResult').classList.add('hidden');
+      });
+      previewWrap.appendChild(removeBtn);
+      fileScanArea.appendChild(previewWrap);
 
       // 3. Create a DEDICATED hidden scan surface. Preview and scan
       //    surfaces are separate so html5-qrcode never collides with
@@ -2079,6 +2118,9 @@ function setupEventListeners() {
       startScanner();
     }
   });
+
+  // Flip camera (front/back)
+  $('#flipCameraBtn').addEventListener('click', flipCamera);
 
   // Scan upload zone
   $('#scanUploadZone').addEventListener('click', () => {
