@@ -455,6 +455,14 @@ function getFullPhone(inputId, selectId = null) {
 }
 
 // ===== Toast Notifications =====
+// Error toasts auto-dismiss after 1s (with a loading/progress countdown) and get
+// a manual "×" close button. When more than 5 error toasts are on screen at once,
+// new ones switch to a fast 0.5s auto-dismiss to avoid stacking.
+const ERROR_TOAST_DURATION = 1000;
+const ERROR_TOAST_STACK_LIMIT = 5;
+const ERROR_TOAST_STACKED_DURATION = 500;
+let visibleErrorToasts = 0;
+
 function showToast(message, type = 'info', duration = 3000) {
   const container = $('#toastContainer');
   const toast = document.createElement('div');
@@ -467,17 +475,35 @@ function showToast(message, type = 'info', duration = 3000) {
     info: 'ℹ'
   };
 
+  // Error toasts: 1s by default, 0.5s once 5+ errors are already visible.
+  let isError = type === 'error';
+  if (isError) {
+    duration = visibleErrorToasts >= ERROR_TOAST_STACK_LIMIT
+      ? ERROR_TOAST_STACKED_DURATION
+      : ERROR_TOAST_DURATION;
+    visibleErrorToasts++;
+  }
+  toast.style.setProperty('--toast-duration', duration + 'ms');
+
   toast.innerHTML = `
     <div class="toast-icon">${icons[type] || 'ℹ'}</div>
     <div class="toast-message">${message}</div>
+    <button type="button" class="toast-close" aria-label="Dismiss notification">×</button>
+    ${isError ? '<div class="toast-progress"></div>' : ''}
   `;
 
   container.appendChild(toast);
 
-  setTimeout(() => {
+  let timer = null;
+  const dismiss = () => {
+    if (timer) { clearTimeout(timer); timer = null; }
+    if (isError) visibleErrorToasts = Math.max(0, visibleErrorToasts - 1);
     toast.classList.add('removing');
     setTimeout(() => toast.remove(), 300);
-  }, duration);
+  };
+
+  toast.querySelector('.toast-close').addEventListener('click', dismiss);
+  timer = setTimeout(dismiss, duration);
 }
 
 // ===== Page Navigation =====
@@ -635,6 +661,39 @@ function setupImageLinkForm() {
       enableActionButtons(false);
       showToast('Image removed', 'info');
     });
+  }
+}
+
+// ===== Simple Color Similarity Check =====
+// Warns when the background is (almost) the same color as the foreground or the
+// eye color — matching colors make the QR unscannable. Kept simple: it only warns.
+function hexToRgb(hex) {
+  let h = String(hex || '').trim().replace('#', '');
+  if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+  const n = parseInt(h, 16);
+  if (isNaN(n) || h.length !== 6) return { r: 0, g: 0, b: 0 };
+  return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+}
+
+function colorsTooSimilar(colorA, colorB) {
+  const a = hexToRgb(colorA);
+  const b = hexToRgb(colorB);
+  const diff = Math.abs(a.r - b.r) + Math.abs(a.g - b.g) + Math.abs(a.b - b.b);
+  return diff < 150; // sum of RGB channel differences
+}
+
+function checkSimilarColors() {
+  if ($('#transparentBg').checked) return;
+  const bg = $('#bgColor').value;
+  const pairs = [
+    ['foreground', $('#fgColor').value],
+    ['eye', $('#eyeColor').value]
+  ];
+  for (const [label, color] of pairs) {
+    if (colorsTooSimilar(bg, color)) {
+      showToast('Background is too similar to the ' + label + ' color — the QR may not scan.', 'warning');
+      return;
+    }
   }
 }
 
@@ -1836,6 +1895,10 @@ function setupCustomizationEvents() {
         if (state.generated) updateQRCode();
       });
       el.addEventListener('change', () => {
+        // Warn if the new color makes background, foreground, or eye too similar.
+        if (id === 'fgColor' || id === 'bgColor' || id === 'eyeColor') {
+          checkSimilarColors();
+        }
         if (state.generated) updateQRCode();
       });
     }

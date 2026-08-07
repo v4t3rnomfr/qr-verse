@@ -1637,10 +1637,43 @@ body::before {
   box-shadow: var(--shadow-lg);
   animation: slideInRight 0.3s ease;
   pointer-events: auto;
+  position: relative;
+  overflow: hidden;
 }
 
 .toast.removing {
   animation: slideOutRight 0.3s ease forwards;
+}
+
+/* Manual close button */
+.toast-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 2px;
+  margin-left: auto;
+  flex-shrink: 0;
+  transition: color var(--transition-fast), transform var(--transition-fast);
+}
+
+.toast-close:hover {
+  color: var(--text-primary);
+  transform: scale(1.15);
+}
+
+/* Loading countdown bar shown on error toasts */
+.toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: var(--error);
+  opacity: 0.7;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  animation: toastProgress var(--toast-duration, 1000ms) linear forwards;
 }
 
 .toast-icon {
@@ -1794,6 +1827,12 @@ body::before {
     opacity: 0;
     transform: translateX(30px);
   }
+}
+
+/* Error toast countdown bar */
+@keyframes toastProgress {
+  from { width: 100%; }
+  to { width: 0%; }
 }
 
 @keyframes scaleIn {
