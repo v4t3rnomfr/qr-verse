@@ -270,6 +270,11 @@ The **Image → Link** QR type uploads an image and generates a QR that points t
 | Name | Required | Purpose |
 |------|----------|---------|
 | `BLOB_READ_WRITE_TOKEN` | on Vercel | Vercel Blob Store credential for saving uploads |
+| `CRON_SECRET` | on Vercel (optional) | Guards the auto-cleanup endpoint called by the Vercel Cron Job |
+
+> ⚠️ **Retention: uploaded images are deleted after 14 days.** The app warns users, and a Vercel Cron Job (daily, `vercel.json` → `/api/qr/cleanup`) removes files older than 14 days from both Blob Store and local disk. QR codes linking to an image stop working once it's deleted.
+>
+> **Compression:** before upload, images are downscaled to 70% and re-encoded as JPEG at 0.7 quality (~30% smaller, ~30% lower quality). Transparent PNG/GIF files stay PNG so alpha is preserved.
 
 > ⚠️ **Keep `BLOB_READ_WRITE_TOKEN` a secret.** It is a *write* credential, not a "public key." Anyone with it can upload, overwrite, or delete files in your store and consume your storage quota. **Never commit it to the repo.** It lives only in your Vercel project env vars (or a local `.env.local`), which is why the file is in `.gitignore`.
 
@@ -283,7 +288,8 @@ Anyone can fork this repo and deploy their own instance with their own storage:
 
 1. In your Vercel project → **Storage** → **Create Blob Store**. Pick **public** access so image URLs are viewable by anyone.
 2. Vercel automatically sets `BLOB_READ_WRITE_TOKEN` for the project (also runnable via `vercel blob create-store <name> --access public`).
-3. Redeploy. Uploads now store in Blob and return a public URL.
+3. (Optional, for auto-cleanup) Add a `CRON_SECRET` env var — the cron job sends it as a `Bearer` token. Set it via `vercel env add CRON_SECRET production`.
+4. Redeploy. Uploads now store in Blob and return a public URL. Old files are auto-deleted after 14 days by the cron job defined in `vercel.json`.
 
 #### Why the token stays out of the repo, but images stay public
 

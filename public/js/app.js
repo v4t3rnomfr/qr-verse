@@ -353,6 +353,7 @@ const formDefinitions = {
           <button type="button" class="btn btn-outline btn-sm" id="imgLinkRemove">Remove Image</button>
         </div>
         <small id="imgLinkStatus" class="field-hint"></small>
+        <span class="upload-hint" id="imgLinkRetention">⚠️ Images are compressed and deleted automatically after 14 days — QR links to them stop working then.</span>
       </div>
     `,
     getData: () => state.imgLinkUrl || null,
@@ -586,6 +587,36 @@ function validateCurrentForm() {
 let imageLinkUploadHandlerBound = false;
 
 /**
+ * Downsizes an image to 70% of its original dimensions and re-encodes it as
+ * JPEG (quality 0.7) — roughly 30% smaller file size and 30% lower quality —
+ * so uploads stay small and Blob storage lasts longer. Transparent PNGs/GIFs
+ * keep PNG encoding so alpha is preserved.
+ */
+function compressImageData(dataUrl, mimeType) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const scale = 0.7;
+        const w = Math.max(1, Math.round(img.naturalWidth * scale));
+        const h = Math.max(1, Math.round(img.naturalHeight * scale));
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        const lossy = mimeType === 'image/jpeg' || mimeType === 'image/webp';
+        resolve(lossy ? canvas.toDataURL('image/jpeg', 0.7) : canvas.toDataURL('image/png'));
+      } catch (err) {
+        reject(err);
+      }
+    };
+    img.onerror = () => reject(new Error('Could not load image for compression'));
+    img.src = dataUrl;
+  });
+}
+
+/**
  * Binds the dropzone, file input, and remove button for the
  * "Image Link" QR type. Uploads the image to the server and
  * stores the resulting absolute URL in state.imgLinkUrl.
@@ -627,10 +658,11 @@ function setupImageLinkForm() {
       statusEl.textContent = 'Uploading image...';
 
       try {
+        const compressed = await compressImageData(ev.target.result, file.type);
         const resp = await fetch('/api/qr/upload', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ image: ev.target.result })
+          body: JSON.stringify({ image: compressed })
         });
         const result = await resp.json();
         if (!resp.ok || !result.success) {

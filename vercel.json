@@ -3,5 +3,8 @@
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api" }
   ],
-  "cleanUrls": true
+  "cleanUrls": true,
+  "crons": [
+    { "path": "/api/qr/cleanup", "schedule": "0 3 * * *" }
+  ]
 }

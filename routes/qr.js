@@ -13,18 +13,22 @@ const router = express.Router();
 // Directory where uploaded images (Image → Link QR) are stored
 const uploadsDir = path.join(__dirname, '..', 'public', 'uploads');
 
-// Clean old uploads (older than 24h) on server start.
+// Uploaded images are auto-deleted after this many days.
+// QR codes link to the stored file, so links stop working after deletion.
+const RETENTION_DAYS = 14;
+
+// Clean old uploads (older than RETENTION_DAYS) on server start.
 // On Vercel (read-only filesystem) this is a no-op — Blob Store handles storage.
 function cleanOldUploads() {
   try {
     if (!fs.existsSync(uploadsDir)) return;
     const files = fs.readdirSync(uploadsDir);
     const now = Date.now();
-    const DAY = 24 * 60 * 60 * 1000;
+    const RETENTION_MS = RETENTION_DAYS * 24 * 60 * 60 * 1000;
     files.forEach(file => {
       const filePath = path.join(uploadsDir, file);
       const stat = fs.statSync(filePath);
-      if (now - stat.mtimeMs > DAY) {
+      if (now - stat.mtimeMs > RETENTION_MS) {
         fs.unlinkSync(filePath);
       }
     });
@@ -37,6 +41,37 @@ function cleanOldUploads() {
   }
 }
 cleanOldUploads();
+
+/**
+ * Deletes Blob Store files older than RETENTION_DAYS.
+ * Returns the number of deleted blobs. Safe to run on any schedule.
+ */
+async function cleanOldBlobs() {
+  try {
+    const { list, del } = require('@vercel/blob');
+    const RETENTION_MS = RETENTION_DAYS * 24 * 60 * 60 * 1000;
+    const cutoff = Date.now() - RETENTION_MS;
+    let cursor;
+    let deleted = 0;
+    do {
+      const page = await list({ prefix: 'qrverse/', limit: 1000, cursor });
+      const stale = page.blobs.filter(b => new Date(b.uploadedAt).getTime() < cutoff);
+      if (stale.length) {
+        await del(stale.map(b => b.url));
+        deleted += stale.length;
+      }
+      cursor = page.cursor;
+    } while (cursor);
+    return deleted;
+  } catch (err) {
+    // Missing token / not on Vercel — nothing to clean. Don't log as an error.
+    const noToken = /No token found/i.test(err && err.message ? err.message : '');
+    if (!noToken) {
+      console.error('Blob cleanup error:', err);
+    }
+    return 0;
+  }
+}
 
 /**
  * Validates data based on QR type
@@ -201,6 +236,31 @@ router.post('/validate', (req, res) => {
   const { type = 'text', data } = req.body;
   const validation = validateQRData(type, data);
   res.json(validation);
+});
+
+/**
+ * GET /api/qr/cleanup
+ * Deletes uploaded images older than RETENTION_DAYS (14 days).
+ * Called by a Vercel Cron Job; protected with a CRON_SECRET env var.
+ */
+router.get('/cleanup', async (req, res) => {
+  const secret = process.env.CRON_SECRET;
+  const auth = req.get('authorization') || '';
+  if (secret && auth !== `Bearer ${secret}`) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  try {
+    const diskDeleted = cleanOldUploads();
+    const blobDeleted = await cleanOldBlobs();
+    res.json({
+      success: true,
+      deleted: { disk: diskDeleted, blob: blobDeleted },
+      retentionDays: RETENTION_DAYS
+    });
+  } catch (error) {
+    console.error('Cleanup error:', error);
+    res.status(500).json({ error: 'Cleanup failed' });
+  }
 });
 
 /**
