@@ -811,8 +811,19 @@ body::before {
   -webkit-appearance: auto;
   appearance: auto;
   cursor: pointer;
-  position: relative;
-  padding-right: 40px;
+}
+
+.form-group input[type="datetime-local"]:hover,
+.form-group input[type="date"]:hover,
+.form-group input[type="time"]:hover {
+  border-color: var(--primary-light, var(--primary));
+}
+
+.form-group input[type="datetime-local"]:disabled,
+.form-group input[type="date"]:disabled,
+.form-group input[type="time"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .form-group input[type="datetime-local"]::-webkit-calendar-picker-indicator,
@@ -821,12 +832,6 @@ body::before {
   cursor: pointer;
   opacity: 0.65;
   transition: opacity var(--transition-fast);
-  width: 18px;
-  height: 18px;
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
 }
 
 .form-group input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover,

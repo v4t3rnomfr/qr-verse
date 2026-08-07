@@ -298,11 +298,11 @@ const formDefinitions = {
         <input type="text" id="eventLocation" placeholder="Conference Room 1">
       </div>
       <div class="form-group">
-        <label for="eventStartDate">Start Date</label>
+        <label>Start Date</label>
         <input type="datetime-local" id="eventStartDate" required>
       </div>
       <div class="form-group">
-        <label for="eventEndDate">End Date</label>
+        <label>End Date</label>
         <input type="datetime-local" id="eventEndDate">
       </div>
     `,
@@ -559,18 +559,16 @@ function switchType(type) {
   });
 
   // Clicking a date/time field anywhere opens its native calendar+time
-  // picker (not just the small indicator icon). Label text clicks are
-  // synthetic (detail === 0) and must NOT open the picker.
+  // picker (not just the small indicator icon).
   formBody.querySelectorAll('input[type="datetime-local"], input[type="date"], input[type="time"]').forEach(el => {
-    el.addEventListener('click', (e) => {
-      if (e.detail === 0) return;
+    el.addEventListener('click', () => {
       try {
         if (typeof el.showPicker === 'function') {
           el.showPicker();
         } else {
           el.focus();
         }
-      } catch (err) {
+      } catch (e) {
         el.focus();
       }
     });
