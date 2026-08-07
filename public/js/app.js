@@ -1618,12 +1618,11 @@ function startScanner() {
     try {
       $('#scanResult').classList.add('hidden');
       html5QrCode = new Html5Qrcode('qr-reader');
+      // No qrbox: html5-qrcode scans the whole video frame, so off-center
+      // codes still decode and its built-in shaded region is never created.
       await html5QrCode.start(
         { facingMode: currentFacingMode },
-        { fps: 10, qrbox: (vw, vh) => {
-            const size = Math.min(Math.floor(vw * 0.6), Math.floor(vh * 0.6), 250);
-            return { width: size, height: size };
-          } },
+        { fps: 10 },
         (decodedText) => {
           showScanResult(true, decodedText);
           stopScanner();

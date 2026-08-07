@@ -1344,16 +1344,10 @@ body::before {
 
 .qr-reader video {
   width: 100% !important;
-  height: auto !important;
+  height: 100% !important;
   max-height: 320px;
   object-fit: cover;
   display: block;
-}
-
-/* Hide html5-qrcode's built-in shaded region & white corner markers —
-   we render our own cleaner scan frame instead. */
-#qr-reader #qr-shaded-region {
-  display: none !important;
 }
 
 /* Scan target frame — square matching the responsive qrbox */
