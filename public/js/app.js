@@ -638,6 +638,72 @@ function setupImageLinkForm() {
   }
 }
 
+// ===== Color Contrast Guard =====
+// Minimum contrast ratio between the background and the QR's dark elements.
+// Below this the code becomes unreliable to scan, so clashing colors are blocked.
+const MIN_COLOR_CONTRAST = 2.2;
+const COLOR_GUARD_INPUTS = ['fgColor', 'bgColor', 'eyeColor', 'gradientColor1', 'gradientColor2'];
+
+function hexToRgb(hex) {
+  let h = String(hex || '').trim().replace('#', '');
+  if (h.length === 3) {
+    h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+  }
+  const num = parseInt(h, 16);
+  if (isNaN(num) || h.length !== 6) return { r: 0, g: 0, b: 0 };
+  return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
+}
+
+function relativeLuminance(rgb) {
+  const f = (v) => {
+    v /= 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  };
+  return 0.2126 * f(rgb.r) + 0.7152 * f(rgb.g) + 0.0722 * f(rgb.b);
+}
+
+function colorContrastRatio(colorA, colorB) {
+  const la = relativeLuminance(hexToRgb(colorA));
+  const lb = relativeLuminance(hexToRgb(colorB));
+  const lighter = Math.max(la, lb);
+  const darker = Math.min(la, lb);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+/**
+ * Checks the background color against every "dark" QR element (foreground,
+ * eye color, gradient stops). Returns { ok, targetId, message } when any pair
+ * is too similar. Skipped entirely for transparent backgrounds.
+ */
+function getColorContrastIssue() {
+  if ($('#transparentBg').checked) return { ok: true };
+
+  const bgColor = $('#bgColor').value;
+  const darkElements = [
+    { id: 'fgColor', label: 'foreground' },
+    { id: 'eyeColor', label: 'eye' }
+  ];
+  if ($('#gradientEnabled').checked) {
+    darkElements.push({ id: 'gradientColor1', label: 'gradient start' });
+    darkElements.push({ id: 'gradientColor2', label: 'gradient end' });
+  }
+
+  for (const el of darkElements) {
+    const input = document.getElementById(el.id);
+    if (!input) continue;
+    const ratio = colorContrastRatio(bgColor, input.value);
+    if (ratio < MIN_COLOR_CONTRAST) {
+      return {
+        ok: false,
+        targetId: el.id,
+        message: 'Background is too similar to the ' + el.label + ' color (contrast ' +
+          ratio.toFixed(1) + ':1) — the QR may not scan.'
+      };
+    }
+  }
+  return { ok: true };
+}
+
 // ===== QR Code Generation =====
 function getQRConfig() {
   const size = parseInt($('#qrSize').value) || 300;
@@ -726,6 +792,17 @@ function updateQRCode() {
   if (!validation.valid) {
     if (state.generated) {
       showToast(validation.message, 'error', 2500);
+    }
+    resetPreview();
+    enableActionButtons(false);
+    return;
+  }
+
+  // Block generation when background is (almost) the same color as the QR elements.
+  const contrastCheck = getColorContrastIssue();
+  if (!contrastCheck.ok) {
+    if (state.generated) {
+      showToast(contrastCheck.message, 'error', 4000);
     }
     resetPreview();
     enableActionButtons(false);
@@ -1818,9 +1895,16 @@ function setupCustomizationEvents() {
     'logoSize', 'gradientEnabled', 'transparentBg'
   ];
 
+  // Last known valid value per color input, used to revert clashing picks.
+  const lastGoodColors = {};
+
   inputs.forEach(id => {
     const el = document.getElementById(id);
     if (el) {
+      if (COLOR_GUARD_INPUTS.includes(id)) {
+        lastGoodColors[id] = el.value;
+      }
+
       el.addEventListener('input', () => {
         // Update value labels
         if (id === 'qrSize') $('#qrSizeValue').textContent = el.value;
@@ -1835,7 +1919,19 @@ function setupCustomizationEvents() {
 
         if (state.generated) updateQRCode();
       });
+
       el.addEventListener('change', () => {
+        // Prohibit background/foreground/eye colors that are too similar.
+        if (COLOR_GUARD_INPUTS.includes(id)) {
+          const issue = getColorContrastIssue();
+          if (!issue.ok) {
+            showToast(issue.message, 'error', 4000);
+            el.value = lastGoodColors[id];   // revert the pick that caused the clash
+          } else {
+            lastGoodColors[id] = el.value;
+          }
+        }
+
         if (state.generated) updateQRCode();
       });
     }
