@@ -1350,6 +1350,12 @@ body::before {
   display: block;
 }
 
+/* Hide html5-qrcode's built-in shaded region & white corner markers —
+   we render our own cleaner scan frame instead. */
+#qr-reader #qr-shaded-region {
+  display: none !important;
+}
+
 /* Scan target frame — square matching the responsive qrbox */
 .scan-frame {
   position: absolute;
